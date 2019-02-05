@@ -36,13 +36,17 @@ function timestamp(endTime) {
 
 
 function interrupt(sw,next) {
+  var endTime = new Date();
   // time = new Date();
   // console.log(time.toUTCString());
   if(sw == switchA && next == switchA){
+    timestamp(endTime);
     next = random(switchA);
   }else if(sw == switchB && next == switchB){
+    timestamp(endTime);
     next = random(switchB);
   }else if(sw == switchC && next == switchC){
+    timestamp(endTime);
     next = random(switchC);
   }
   console.log(next);
@@ -72,8 +76,8 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.error('There was an error', err); //output error message to console
       return;
     }
-    var endTime = new Date();
-    timestamp(endTime);
+
+
     next = interrupt(switchA,next);
     socket.emit('next', next); //send button status to client
   });
@@ -82,8 +86,6 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.error('There was an error', err); //output error message to console
       return;
     }
-    var endTime = new Date();
-    timestamp(endTime);
     next = interrupt(switchB,next);
     socket.emit('next',next); //send button status to client
   });
