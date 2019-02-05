@@ -12,6 +12,7 @@ var buttonC = new Gpio(switchC, 'in', 'both');
 
 var list = [4,10,16];
 var startTime = new Date();
+var delta;
 
 
 http.listen(8080); //listen to port 8080
@@ -27,12 +28,12 @@ function random(without) {
 
 function timestamp(sw) {
   var endTime = new Date();
-  var delta = endTime - startTime;
+  delta = endTime - startTime;
   var intTime = parseInt(delta);
   var d = new Date(delta);
-  console.log( d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds() ); // "4:59"
+  console.log('Timelab: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds() ); // "4:59"
   // console.log(delta + 'millisec');
-  console.log('Timelab: ' + Math.floor(intTime/1000) + ':' + Math.round((intTime/1000 - (Math.floor(intTime/1000)))*1000) + ' second');
+  // console.log('Timelab: ' + Math.floor(intTime/1000) + ':' + Math.round((intTime/1000 - (Math.floor(intTime/1000)))*1000) + ' second');
   console.log("startTime: " + startTime.toUTCString());
   console.log("endTime: " + endTime.toUTCString());
   startTime = endTime;
@@ -65,6 +66,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     if(next == switchA){
       next = timestamp(switchA);
       socket.emit('next', next); //send button status to client
+      socket.emit('delta', delta); //send button status to client
       console.log('Next: ',next);
     }
   });

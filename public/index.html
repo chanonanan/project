@@ -3,20 +3,48 @@
 
 <body>
   <h1>Demo switch</h1>
-  <p>Next : <font id="next"></font>
-  </p>
+  <p>Next : <font id="next"></font></p>
+  <table id="timelab">
+    <thead>
+        <tr>
+            <th>Time Lab</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- <tr>
+            <td>aaaaa</td>
+        </tr> -->
+    </tbody>
+</table>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script> <!-- include socket.io client side script -->
   <script>
     var socket = io(); //load socket.io-client and connect to the host that serves the page
+    var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+
     window.addEventListener("load", function() { //when page loads
       console.log('init');
       socket.emit("next", Number(4));
+      // socket.emit("delta", Number(4));
     });
 
     socket.on('next', function(data) { //get button status from client
       console.log(data);
       document.getElementById("next").innerHTML = data; //change checkbox $
       socket.emit("next", data); //send push button status to back to se$
+    });
+
+    socket.on('delta', function(data) { //get button status from client
+      console.log(data);
+      // Insert a row in the table at row index 0
+      var newRow   = tableRef.insertRow(tableRef.rows.length);
+
+      // Insert a cell in the row at index 0
+      var newCell  = newRow.insertCell(0);
+
+      // Append a text node to the cell
+      var newText  = document.createTextNode(data + 'Min')
+      newCell.appendChild(newText);
+      socket.emit("delta", data); //send push button status to back to se$
     });
   </script>
 
