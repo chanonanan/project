@@ -11,7 +11,7 @@ var buttonB = new Gpio(switchB, 'in', 'both');
 var buttonC = new Gpio(switchC, 'in', 'both');
 
 var list = [4,10,16];
-var startTime = new Date();
+var startTime = Date.now();
 
 
 http.listen(8080); //listen to port 8080
@@ -27,16 +27,17 @@ function random(without) {
 
 function timestamp(endTime) {
   var delta = endTime - startTime;
-  console.log(delta);
-  console.log(startTime,endTime);
+  console.log(delta.toUTCString());
+  console.log("startTime: " + startTime.toUTCString() + " endTime: "endTime.toUTCString());
+  startTime = endTime;
   // console.log(Math.floor(delta/1000) + ' sec ' + delta - (Math.floor(delta/1000)) + ' millisec');
 
 }
 
 
 function interrupt(sw,next) {
-  time = new Date();
-  console.log(time.toUTCString());
+  // time = new Date();
+  // console.log(time.toUTCString());
   if(sw == switchA && next == switchA){
     next = random(switchA);
   }else if(sw == switchB && next == switchB){
@@ -65,13 +66,13 @@ function handler (req, res) { //create server
 io.sockets.on('connection', function (socket) {// WebSocket Connection
   var next = "4"; //static variable for current status
   socket.emit('next', next);
-  console.log(next);
+  // console.log(next);
   buttonA.watch(function (err, value) { //Watch for hardware interrupts on pushButton
     if (err) { //if an error
       console.error('There was an error', err); //output error message to console
       return;
     }
-    var endTime = new Date();
+    var endTime = Date.now();
     timestamp(endTime);
     next = interrupt(switchA,next);
     socket.emit('next', next); //send button status to client
