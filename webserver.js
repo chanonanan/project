@@ -29,6 +29,8 @@ function timestamp(sw) {
   var endTime = new Date();
   var delta = endTime - startTime;
   var intTime = parseInt(delta);
+  var d = new Date(delta);
+  console.log( d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds() ); // "4:59"
   // console.log(delta + 'millisec');
   console.log('Timelab: ' + Math.floor(intTime/1000) + ':' + Math.round((intTime/1000 - (Math.floor(intTime/1000)))*1000) + ' second');
   console.log("startTime: " + startTime.toUTCString());
