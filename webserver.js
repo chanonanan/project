@@ -66,7 +66,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     if(next == switchA){
       next = timestamp(switchA);
       socket.emit('next', next); //send button status to client
-      socket.emit('delta', delta); //send button status to client
+      socket.emit('delta', delta);
       console.log('Next: ',next);
     }
   });
@@ -78,6 +78,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     if(next == switchB){
       next = timestamp(switchB);
       socket.emit('next', next); //send button status to client
+      socket.emit('delta', delta);
       console.log('Next: ',next);
     }
   });
@@ -89,6 +90,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     if(next == switchC){
       next = timestamp(switchC);
       socket.emit('next', next); //send button status to client
+      socket.emit('delta', delta);
       console.log('Next: ',next);
     }
   });
