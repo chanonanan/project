@@ -27,7 +27,7 @@ function random(without) {
 
 function timestamp(endTime) {
   var delta = endTime - startTime;
-  console.log(delta.toUTCString());
+  console.log(delta);
   console.log("startTime: " + startTime.toUTCString() + " endTime: " + endTime.toUTCString());
   startTime = endTime;
   // console.log(Math.floor(delta/1000) + ' sec ' + delta - (Math.floor(delta/1000)) + ' millisec');
