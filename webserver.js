@@ -28,7 +28,9 @@ function random(without) {
 function timestamp(sw) {
   var endTime = new Date();
   var delta = endTime - startTime;
-  console.log(delta);
+  var intTime = parseInt(delta);
+  console.log(delta + 'millisec');
+  console.log(Math.floor(intTime/1000) + ' sec ' + ((intTime/1000 - (Math.floor(intTime/1000)))*1000) + ' millisec');
   console.log("startTime: " + startTime.toUTCString() + " endTime: " + endTime.toUTCString());
   startTime = endTime;
   next = random(sw);
@@ -60,6 +62,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     if(next == switchA){
       next = timestamp(switchA);
       socket.emit('next', next); //send button status to client
+      console.log('Next: ',next);
     }
   });
   buttonB.watch(function (err, value) { //Watch for hardware interrupts on pushButton
@@ -70,6 +73,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     if(next == switchB){
       next = timestamp(switchB);
       socket.emit('next', next); //send button status to client
+      console.log('Next: ',next);
     }
   });
   buttonC.watch(function (err, value) { //Watch for hardware interrupts on pushButton
@@ -80,6 +84,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     if(next == switchC){
       next = timestamp(switchC);
       socket.emit('next', next); //send button status to client
+      console.log('Next: ',next);
     }
   });
   // socket.on('light', function(data) { //get light switch status from client
