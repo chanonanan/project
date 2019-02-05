@@ -28,13 +28,14 @@ function random(without) {
 function timestamp(endTime) {
   var delta = endTime - startTime;
   console.log(delta);
+  console.log(Math.floor(delta/1000) + ' sec ' + delta - (Math.floor(delta/1000)) + ' millisec');
+
 }
 
 
 function interrupt(sw,next) {
   time = new Date();
   console.log(time.toUTCString());
-  console.log(Math.floor(time.toUTCString()/1000) + ' sec ' + time.toUTCString()-(Math.floor(time.toUTCString()/1000)) + ' millisec');
   if(sw == switchA && next == switchA){
     next = random(switchA);
   }else if(sw == switchB && next == switchB){
