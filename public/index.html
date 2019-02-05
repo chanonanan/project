@@ -42,7 +42,8 @@
       var newCell  = newRow.insertCell(0);
 
       // Append a text node to the cell
-      var newText  = document.createTextNode(data + 'Min')
+      var d = new Date(data);
+      var newText  = document.createTextNode(d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds() + 'Min')
       newCell.appendChild(newText);
       socket.emit("delta", data); //send push button status to back to se$
     });
