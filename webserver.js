@@ -34,6 +34,7 @@ function timestamp(sw) {
   console.log('Timelab: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds() ); // "4:59"
   console.log(delta + 'millisec');
   // console.log('Timelab: ' + Math.floor(intTime/1000) + ':' + Math.round((intTime/1000 - (Math.floor(intTime/1000)))*1000) + ' second');
+  console.log("Time: " + startTime);
   console.log("startTime: " + startTime.toUTCString());
   console.log("endTime: " + endTime.toUTCString());
   startTime = endTime;
@@ -55,6 +56,7 @@ function handler (req, res) { //create server
 }
 
 io.sockets.on('connection', function (socket) {// WebSocket Connection
+  console.log('user connected');
   var next = 4; //static variable for current status
   socket.emit('next', next);
   // console.log(next);
