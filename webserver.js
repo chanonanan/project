@@ -29,9 +29,10 @@ function timestamp(sw) {
   var endTime = new Date();
   var delta = endTime - startTime;
   var intTime = parseInt(delta);
-  console.log(delta + 'millisec');
-  console.log(Math.floor(intTime/1000) + ' sec ' + ((intTime/1000 - (Math.floor(intTime/1000)))*1000) + ' millisec');
-  console.log("startTime: " + startTime.toUTCString() + " endTime: " + endTime.toUTCString());
+  // console.log(delta + 'millisec');
+  console.log('Timelab: ' + Math.floor(intTime/1000) + ':' + Math.round((intTime/1000 - (Math.floor(intTime/1000)))*1000) + ' second');
+  console.log("startTime: " + startTime.toUTCString());
+  console.log("endTime: " + endTime.toUTCString());
   startTime = endTime;
   next = random(sw);
   return next;
