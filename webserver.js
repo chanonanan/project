@@ -11,7 +11,7 @@ var buttonB = new Gpio(switchB, 'in', 'both');
 var buttonC = new Gpio(switchC, 'in', 'both');
 
 var list = [4,10,16];
-var startTime = new Date();
+var startTime;
 var delta;
 
 
@@ -57,6 +57,7 @@ function handler (req, res) { //create server
 
 io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
+  startTime = new Date();
   var next = 4; //static variable for current status
   socket.emit('next', next);
   // console.log(next);
