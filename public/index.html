@@ -11,15 +11,15 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
+        <!-- <tr>
             <td>aaaaa</td>
-        </tr>
+        </tr> -->
     </tbody>
 </table>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script> <!-- include socket.io client side script -->
   <script>
     var socket = io(); //load socket.io-client and connect to the host that serves the page
-    var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+    var tableRef = document.getElementById('timelab').getElementsByTagName('tbody')[0];
 
     window.addEventListener("load", function() { //when page loads
       console.log('init');
