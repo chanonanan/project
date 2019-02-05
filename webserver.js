@@ -96,6 +96,9 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.log('Next: ',next);
     }
   });
+  socket.on('disconnect', () => {
+    console.log('user disconnected')
+  });
   // socket.on('light', function(data) { //get light switch status from client
   //   lightvalue = data;
   //   if (lightvalue != LED.readSync()) { //only change LED if status has changed
