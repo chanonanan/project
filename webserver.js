@@ -11,7 +11,7 @@ var buttonB = new Gpio(switchB, 'in', 'both');
 var buttonC = new Gpio(switchC, 'in', 'both');
 
 var list = [4,10,16];
-var startTime = Date.now();
+var startTime = new Date();
 
 
 http.listen(8080); //listen to port 8080
@@ -72,7 +72,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.error('There was an error', err); //output error message to console
       return;
     }
-    var endTime = Date.now();
+    var endTime = new Date();
     timestamp(endTime);
     next = interrupt(switchA,next);
     socket.emit('next', next); //send button status to client
