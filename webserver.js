@@ -25,35 +25,16 @@ function random(without) {
   }
 }
 
-function timestamp(endTime) {
+function timestamp() {
+  var endTime = new Date();
   var delta = endTime - startTime;
   console.log(delta);
   console.log("startTime: " + startTime.toUTCString() + " endTime: " + endTime.toUTCString());
   startTime = endTime;
-  // console.log(Math.floor(delta/1000) + ' sec ' + delta - (Math.floor(delta/1000)) + ' millisec');
-
-}
-
-
-function interrupt(sw,next) {
-  var endTime = new Date();
-  // time = new Date();
-  // console.log(time.toUTCString());
-  if(sw == switchA && next == switchA){
-    timestamp(endTime);
-    next = random(switchA);
-  }else if(sw == switchB && next == switchB){
-    timestamp(endTime);
-    next = random(switchB);
-  }else if(sw == switchC && next == switchC){
-    timestamp(endTime);
-    next = random(switchC);
-  }
-  console.log(next);
+  next = random(sw);
   return next;
-//  socket.emit('next',next);
-
 }
+
 
 function handler (req, res) { //create server
   fs.readFile(__dirname + '/public/index.html', function(err, data) { //read file index.html in public folder
@@ -68,7 +49,7 @@ function handler (req, res) { //create server
 }
 
 io.sockets.on('connection', function (socket) {// WebSocket Connection
-  var next = "4"; //static variable for current status
+  var next = 4; //static variable for current status
   socket.emit('next', next);
   // console.log(next);
   buttonA.watch(function (err, value) { //Watch for hardware interrupts on pushButton
@@ -76,28 +57,30 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.error('There was an error', err); //output error message to console
       return;
     }
-
-
-    next = interrupt(switchA,next);
-    socket.emit('next', next); //send button status to client
+    if(next == switchA){
+      next = timestamp();
+      socket.emit('next', next); //send button status to client
+    }
   });
   buttonB.watch(function (err, value) { //Watch for hardware interrupts on pushButton
     if (err) { //if an error
       console.error('There was an error', err); //output error message to console
       return;
     }
-    next = interrupt(switchB,next);
-    socket.emit('next',next); //send button status to client
+    if(next == switchB){
+      next = timestamp();
+      socket.emit('next', next); //send button status to client
+    }
   });
   buttonC.watch(function (err, value) { //Watch for hardware interrupts on pushButton
     if (err) { //if an error
       console.error('There was an error', err); //output error message to console
       return;
     }
-    var endTime = new Date();
-    timestamp(endTime);
-    next = interrupt(switchC,next);
-    socket.emit('next', next); //send button status to client
+    if(next == switchC){
+      next = timestamp();
+      socket.emit('next', next); //send button status to client
+    }
   });
   // socket.on('light', function(data) { //get light switch status from client
   //   lightvalue = data;
