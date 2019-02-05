@@ -25,7 +25,7 @@ function random(without) {
   }
 }
 
-function timestamp() {
+function timestamp(sw) {
   var endTime = new Date();
   var delta = endTime - startTime;
   console.log(delta);
@@ -58,7 +58,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       return;
     }
     if(next == switchA){
-      next = timestamp();
+      next = timestamp(switchA);
       socket.emit('next', next); //send button status to client
     }
   });
@@ -68,7 +68,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       return;
     }
     if(next == switchB){
-      next = timestamp();
+      next = timestamp(switchB);
       socket.emit('next', next); //send button status to client
     }
   });
@@ -78,7 +78,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       return;
     }
     if(next == switchC){
-      next = timestamp();
+      next = timestamp(switchC);
       socket.emit('next', next); //send button status to client
     }
   });
