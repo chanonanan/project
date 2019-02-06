@@ -6,9 +6,9 @@ var LED = new Gpio(4, 'out'); //use GPIO pin 4 as output
 var switchA = 4;
 var switchB = 10;
 var switchC = 16;
-var buttonA = new Gpio(switchA, 'in', 'rising', {debounceTimeout: 200}); //use GPIO pin 17 as input, and 'both' button presses, and releases should be handled
-var buttonB = new Gpio(switchB, 'in', 'rising', {debounceTimeout: 200});
-var buttonC = new Gpio(switchC, 'in', 'rising', {debounceTimeout: 200});
+var buttonA = new Gpio(switchA, 'in', 'rising', {debounceTimeout: 20}); //use GPIO pin 17 as input, and 'both' button presses, and releases should be handled
+var buttonB = new Gpio(switchB, 'in', 'rising', {debounceTimeout: 20});
+var buttonC = new Gpio(switchC, 'in', 'rising', {debounceTimeout: 20});
 
 var list = [4,10,16];
 var startTime;
