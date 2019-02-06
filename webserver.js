@@ -22,7 +22,7 @@ var count = 1;
 
 http.listen(8080); //listen to port 8080
 
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url,{ useNewUrlParser: true }, function(err, db) {
   if (err) throw err;
   console.log("Database created!");
   db.close();
