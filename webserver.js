@@ -36,8 +36,8 @@ function timestamp(sw) {
   console.log(delta + 'millisec');
   // console.log('Timelab: ' + Math.floor(intTime/1000) + ':' + Math.round((intTime/1000 - (Math.floor(intTime/1000)))*1000) + ' second');
   console.log("Time: " + startTime);
-  console.log("startTime: " + startTime.toUTCString());
-  console.log("endTime: " + endTime.toUTCString());
+  console.log("startTime: " + startTime);
+  console.log("endTime: " + endTime);
   startTime = endTime;
   next = random(sw);
   return next;
@@ -59,8 +59,9 @@ function handler (req, res) { //create server
 io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
   startTime = new Date();
-  var next = 4; //static variable for current status
+  var next = list[Math.floor((Math.random()*list.length))]; //static variable for current status
   socket.emit('next', next);
+  socket.emit('startTime', startTime);
   // console.log(next);
   buttonA.watch(function (err, value) { //Watch for hardware interrupts on pushButton
     if (err) { //if an error

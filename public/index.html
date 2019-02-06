@@ -3,6 +3,7 @@
 
 <body>
   <h1>Demo switch</h1>
+  <h1 id="startTime"></h1>
   <p>Next : <font id="next"></font></p>
   <table id="timelab">
     <thead>
@@ -29,8 +30,14 @@
 
     window.addEventListener("load", function() { //when page loads
       console.log('init');
-      socket.emit("next", Number(4));
+      // socket.emit("next", Number(4));
       // socket.emit("delta", Number(4));
+    });
+
+    socket.on('startTime', function(data) { //get button status from client
+      console.log(data);
+      document.getElementById("startTime").innerHTML = data; //change checkbox $
+      socket.emit("startTime", data); //send push button status to back to se$
     });
 
     socket.on('next', function(data) { //get button status from client
