@@ -6,13 +6,14 @@ var LED = new Gpio(4, 'out'); //use GPIO pin 4 as output
 var switchA = 4;
 var switchB = 10;
 var switchC = 16;
-var buttonA = new Gpio(switchA, 'in', 'rising', {debounceTimeout: 10}); //use GPIO pin 17 as input, and 'both' button presses, and releases should be handled
-var buttonB = new Gpio(switchB, 'in', 'rising', {debounceTimeout: 10});
-var buttonC = new Gpio(switchC, 'in', 'rising', {debounceTimeout: 10});
+var buttonA = new Gpio(switchA, 'in', 'rising', {debounceTimeout: 200}); //use GPIO pin 17 as input, and 'both' button presses, and releases should be handled
+var buttonB = new Gpio(switchB, 'in', 'rising', {debounceTimeout: 200});
+var buttonC = new Gpio(switchC, 'in', 'rising', {debounceTimeout: 200});
 
 var list = [4,10,16];
 var startTime;
 var delta;
+var count = 1;
 
 
 http.listen(8080); //listen to port 8080
@@ -66,11 +67,11 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.error('There was an error', err); //output error message to console
       return;
     }
-    console.log('///////////');
     if(next == switchA && value){
       next = timestamp(switchA);
       socket.emit('next', next); //send button status to client
       socket.emit('delta', delta);
+      // socket.emit('count', count);
       console.log('Next: ',next);
     }
   });
@@ -79,11 +80,11 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.error('There was an error', err); //output error message to console
       return;
     }
-    console.log('///////////');
     if(next == switchB && value){
       next = timestamp(switchB);
       socket.emit('next', next); //send button status to client
       socket.emit('delta', delta);
+      // socket.emit('count', count);
       console.log('Next: ',next);
     }
   });
@@ -92,11 +93,11 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.error('There was an error', err); //output error message to console
       return;
     }
-    console.log('///////////');
     if(next == switchC && value){
       next = timestamp(switchC);
       socket.emit('next', next); //send button status to client
       socket.emit('delta', delta);
+      // socket.emit('count', count);
       console.log('Next: ',next);
     }
   });
