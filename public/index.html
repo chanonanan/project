@@ -144,7 +144,7 @@ let stopwatch = new Stopwatch(
 
     socket.on('startTime', function(data) { //get button status from client
       console.log(data);
-      Stopwatch.start();
+      stopwatch.start();
       // document.getElementById("startTime").innerHTML = data; //change checkbox $
       socket.emit("startTime", data); //send push button status to back to se$
     });
