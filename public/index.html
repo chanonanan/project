@@ -126,6 +126,7 @@ function clearChildren(node) {
 let stopwatch = new Stopwatch(
     document.querySelector('.stopwatch'),
     document.querySelector('.results'));
+
     function addZero(x, n) {
       while (x.toString().length < n) {
         x = "0" + x;
@@ -143,7 +144,8 @@ let stopwatch = new Stopwatch(
 
     socket.on('startTime', function(data) { //get button status from client
       console.log(data);
-      document.getElementById("startTime").innerHTML = data; //change checkbox $
+      Stopwatch.start();
+      // document.getElementById("startTime").innerHTML = data; //change checkbox $
       socket.emit("startTime", data); //send push button status to back to se$
     });
 
@@ -173,59 +175,59 @@ let stopwatch = new Stopwatch(
   </script>
   <style media="screen">
   * {
-margin: 0;
-padding: 0;
-}
+    margin: 0;
+    padding: 0;
+    }
 
-html {
-background: #333;
-color: #bbb;
-font-family: Menlo;
-}
+    html {
+    background: #333;
+    color: #bbb;
+    font-family: Menlo;
+    }
 
-.controls {
-position: fixed;
-text-align: center;
-top: 1em;
-width: 100%;
-}
+    .controls {
+    position: fixed;
+    text-align: center;
+    top: 1em;
+    width: 100%;
+    }
 
-.button {
-color: #bbb;
-font-size: 4vw;
-margin: 0 0.5em;
-text-decoration: none;
-}
+    .button {
+    color: #bbb;
+    font-size: 4vw;
+    margin: 0 0.5em;
+    text-decoration: none;
+    }
 
-.button:first-child {
-  margin-left: 0;
-}
+    .button:first-child {
+      margin-left: 0;
+    }
 
-.button:last-child {
-  margin-right: 0;
-}
+    .button:last-child {
+      margin-right: 0;
+    }
 
-.button:hover {
-color: white;
-}
+    .button:hover {
+    color: white;
+    }
 
-.stopwatch {
-font-size: 20vw;
-height: 100%;
-line-height: 100vh;
-text-align: center;
-}
+    .stopwatch {
+    font-size: 20vw;
+    height: 100%;
+    line-height: 100vh;
+    text-align: center;
+    }
 
-.results {
-border-color: lime;
-list-style: none;
-margin: 0;
-padding: 0;
-position: absolute;
-bottom: 0;
-left: 50%;
-transform: translateX(-50%);
-}
+    .results {
+    border-color: lime;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    }
   </style>
 </html>
 </body>
