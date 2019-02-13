@@ -121,7 +121,8 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     }
   });
   socket.on('disconnect', () => {
-    console.log('user disconnected')
+    console.log('user disconnected');
+    count = 0;
   });
   // socket.on('light', function(data) { //get light switch status from client
   //   lightvalue = data;
