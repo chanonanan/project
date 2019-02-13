@@ -22,15 +22,6 @@ var next = null;
 
 http.listen(8080); //listen to port 8080
 
-<<<<<<< HEAD
-=======
-MongoClient.connect(url,{ useNewUrlParser: true }, function(err, db) {
-  if (err) throw err;
-  console.log("Database created!");
-  db.close();
-});
-
->>>>>>> 87a59b3... useNewUrlParser
 function random(without) {
   var out = list[Math.floor((Math.random()*list.length))];
   if (out == without){
