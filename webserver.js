@@ -69,7 +69,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.error('There was an error', err); //output error message to console
       return;
     }
-    if(next == switchA && running){
+    if(next == switchA){
       next = timestamp(switchA);
       socket.emit('next', next); //send button status to client
       socket.emit('delta', delta);
@@ -83,7 +83,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.error('There was an error', err); //output error message to console
       return;
     }
-    if(next == switchB && running){
+    if(next == switchB){
       next = timestamp(switchB);
       socket.emit('next', next); //send button status to client
       socket.emit('delta', delta);
@@ -97,7 +97,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.error('There was an error', err); //output error message to console
       return;
     }
-    if(next == switchC && running){
+    if(next == switchC){
       next = timestamp(switchC);
       socket.emit('next', next); //send button status to client
       socket.emit('delta', delta);
