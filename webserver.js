@@ -61,14 +61,7 @@ function handler (req, res) { //create server
 
 io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
-  if(running){
-    startTime = new Date();
-    var next = list[Math.floor((Math.random()*list.length))]; //static variable for current status
-    socket.emit('next', next);
-    socket.emit('startTime', startTime);
-  } else {
-    console.log('not running');
-  }
+  
     // console.log(next);
   buttonA.watch(function (err, value) { //Watch for hardware interrupts on pushButton
     if (err) { //if an error
@@ -114,6 +107,14 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
   socket.on('running', function (data) {
     running = data;
     console.log('running...',data);
+    if(running){
+      startTime = new Date();
+      var next = list[Math.floor((Math.random()*list.length))]; //static variable for current status
+      socket.emit('next', next);
+      socket.emit('startTime', startTime);
+    } else {
+      console.log('not running');
+    }
   });
 
   
