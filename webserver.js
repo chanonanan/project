@@ -34,11 +34,11 @@ function random(without) {
 
 function getPattern() {
   switch (pattern[count]) {
-    case A:
+    case 'A':
       return switchA;
-    case B:
+    case 'B':
       return switchB;
-    case C:
+    case 'C':
       return switchC;
   }
 }
