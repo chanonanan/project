@@ -17,7 +17,7 @@ var startTime;
 var delta;
 var count = 0;
 var pattern = "ABABCBABC";
-var next = getPattern();
+var next;
 
 
 http.listen(8080); //listen to port 8080
@@ -76,6 +76,7 @@ function handler (req, res) { //create server
 
 io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
+  next = getPattern();
   startTime = new Date();
   io.sockets.emit('next', next);
   io.sockets.emit('startTime', startTime);
