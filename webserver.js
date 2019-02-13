@@ -17,6 +17,7 @@ var startTime;
 var delta;
 var count = 1;
 var running = false;
+var next = '';
 
 
 http.listen(8080); //listen to port 8080
@@ -109,7 +110,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     console.log('running...',data);
     if(running){
       startTime = new Date();
-      var next = list[Math.floor((Math.random()*list.length))]; //static variable for current status
+      next = list[Math.floor((Math.random()*list.length))]; //static variable for current status
       socket.emit('next', next);
       socket.emit('startTime', startTime);
     } else {
