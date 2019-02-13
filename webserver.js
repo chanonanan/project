@@ -3,8 +3,6 @@ var fs = require('fs'); //require filesystem module
 var io = require('socket.io')(http) //require socket.io module and pass the http object (server)
 var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 // var LED = new Gpio(4, 'out'); //use GPIO pin 4 as output
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/mydb";
 
 
 var switchA = 4;
@@ -21,12 +19,6 @@ var count = 1;
 
 
 http.listen(8080); //listen to port 8080
-
-MongoClient.connect(url,{ useNewUrlParser: true }, function(err, db) {
-  if (err) throw err;
-  console.log("Database created!");
-  db.close();
-});
 
 function random(without) {
   var out = list[Math.floor((Math.random()*list.length))];
