@@ -16,11 +16,10 @@ var list = [4,10,16];
 var startTime;
 var delta;
 var count = 1;
-var running = false;
-var next = null;
 
 
 http.listen(8080); //listen to port 8080
+
 
 function random(without) {
   var out = list[Math.floor((Math.random()*list.length))];
@@ -62,8 +61,11 @@ function handler (req, res) { //create server
 
 io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
-  
-    // console.log(next);
+  startTime = new Date();
+  var next = list[Math.floor((Math.random()*list.length))]; //static variable for current status
+  socket.emit('next', next);
+  socket.emit('startTime', startTime);
+  // console.log(next);
   buttonA.watch(function (err, value) { //Watch for hardware interrupts on pushButton
     if (err) { //if an error
       console.error('There was an error', err); //output error message to console
@@ -75,7 +77,6 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       socket.emit('delta', delta);
       // socket.emit('count', count);
       console.log('Next: ',next);
-      console.log('running: ',running);
     }
   });
   buttonB.watch(function (err, value) { //Watch for hardware interrupts on pushButton
@@ -89,7 +90,6 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       socket.emit('delta', delta);
       // socket.emit('count', count);
       console.log('Next: ',next);
-      console.log('running: ',running);
     }
   });
   buttonC.watch(function (err, value) { //Watch for hardware interrupts on pushButton
@@ -103,35 +103,8 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       socket.emit('delta', delta);
       // socket.emit('count', count);
       console.log('Next: ',next);
-      console.log('running: ',running);
     }
   });
-  
-
-  socket.on('running', function (data) {
-    running = data;
-    console.log('running...',data);
-    if(running){
-      startTime = new Date();
-      next = list[Math.floor((Math.random()*list.length))]; //static variable for current status
-      socket.emit('next', next);
-      socket.emit('startTime', startTime);
-    } else {
-      console.log('not running');
-    }
-  });
-
-  socket.on('next', function (data) {
-    next = data;
-    console.log('io_next:',next);
-  });
-
-  socket.on('delta', function (data) {
-    delta = data;
-    console.log('io_delta:',delta);
-  });
-
-  
   socket.on('disconnect', () => {
     console.log('user disconnected')
   });
