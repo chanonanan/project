@@ -17,7 +17,7 @@ var startTime;
 var delta;
 var count = 1;
 var running = false;
-var next = '';
+var next = null;
 
 
 http.listen(8080); //listen to port 8080
@@ -119,6 +119,14 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     } else {
       console.log('not running');
     }
+  });
+
+  socket.on('next', function (data) {
+    next = data;
+  });
+
+  socket.on('delta', function (data) {
+    delta = data;
   });
 
   
