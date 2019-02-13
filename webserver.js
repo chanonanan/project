@@ -75,6 +75,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       socket.emit('delta', delta);
       // socket.emit('count', count);
       console.log('Next: ',next);
+      console.log('running: ',running);
     }
   });
   buttonB.watch(function (err, value) { //Watch for hardware interrupts on pushButton
@@ -88,6 +89,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       socket.emit('delta', delta);
       // socket.emit('count', count);
       console.log('Next: ',next);
+      console.log('running: ',running);
     }
   });
   buttonC.watch(function (err, value) { //Watch for hardware interrupts on pushButton
@@ -101,6 +103,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       socket.emit('delta', delta);
       // socket.emit('count', count);
       console.log('Next: ',next);
+      console.log('running: ',running);
     }
   });
   
