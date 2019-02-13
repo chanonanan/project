@@ -16,6 +16,7 @@ var list = [4,10,16];
 var startTime;
 var delta;
 var count = 1;
+var running = false;
 
 
 http.listen(8080); //listen to port 8080
@@ -60,7 +61,8 @@ function handler (req, res) { //create server
 
 io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
-  startTime = new Date();
+  if(running){
+    startTime = new Date();
   var next = list[Math.floor((Math.random()*list.length))]; //static variable for current status
   socket.emit('next', next);
   socket.emit('startTime', startTime);
@@ -104,6 +106,16 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.log('Next: ',next);
     }
   });
+  } else {
+    console.log('not running');
+  }
+
+  socket.on('running', function (data) {
+    running = data;
+    console.log('running...',data);
+  });
+
+  
   socket.on('disconnect', () => {
     console.log('user disconnected')
   });
