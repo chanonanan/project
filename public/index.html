@@ -42,7 +42,7 @@
 
     socket.on('next', function(data) { //get button status from client
       console.log(data);
-      document.getElementById("next").innerHTML = data; //change checkbox $
+      document.getElementById("next").innerHTML = getPlateNumber(data); //change checkbox $
       socket.emit("next", data); //send push button status to back to se$
     });
 
@@ -63,6 +63,17 @@
       newCell.appendChild(newText);
       socket.emit("delta", data); //send push button status to back to se$
     });
+
+    function getPlateNumber(gpio) {
+      switch (gpio) {
+        case 4:
+          return '1';
+        case 10:
+          return '2';
+        case 16:
+          return '3';
+      }
+    }
   </script>
 </html>
 </body>
