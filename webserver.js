@@ -123,10 +123,12 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
 
   socket.on('next', function (data) {
     next = data;
+    console.log('io_next:',next);
   });
 
   socket.on('delta', function (data) {
     delta = data;
+    console.log('io_delta:',delta);
   });
 
   
