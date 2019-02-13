@@ -63,16 +63,19 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
   if(running){
     startTime = new Date();
-  var next = list[Math.floor((Math.random()*list.length))]; //static variable for current status
-  socket.emit('next', next);
-  socket.emit('startTime', startTime);
-  // console.log(next);
+    var next = list[Math.floor((Math.random()*list.length))]; //static variable for current status
+    socket.emit('next', next);
+    socket.emit('startTime', startTime);
+  } else {
+    console.log('not running');
+  }
+    // console.log(next);
   buttonA.watch(function (err, value) { //Watch for hardware interrupts on pushButton
     if (err) { //if an error
       console.error('There was an error', err); //output error message to console
       return;
     }
-    if(next == switchA){
+    if(next == switchA && running){
       next = timestamp(switchA);
       socket.emit('next', next); //send button status to client
       socket.emit('delta', delta);
@@ -85,7 +88,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.error('There was an error', err); //output error message to console
       return;
     }
-    if(next == switchB){
+    if(next == switchB && running){
       next = timestamp(switchB);
       socket.emit('next', next); //send button status to client
       socket.emit('delta', delta);
@@ -98,7 +101,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.error('There was an error', err); //output error message to console
       return;
     }
-    if(next == switchC){
+    if(next == switchC && running){
       next = timestamp(switchC);
       socket.emit('next', next); //send button status to client
       socket.emit('delta', delta);
@@ -106,9 +109,7 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.log('Next: ',next);
     }
   });
-  } else {
-    console.log('not running');
-  }
+  
 
   socket.on('running', function (data) {
     running = data;
