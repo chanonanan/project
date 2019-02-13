@@ -8,14 +8,16 @@ var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 var switchA = 4;
 var switchB = 10;
 var switchC = 16;
-var buttonA = new Gpio(switchA, 'in', 'rising', {debounceTimeout: 20}); //use GPIO pin 17 as input, and 'both' button presses, and releases should be handled
-var buttonB = new Gpio(switchB, 'in', 'rising', {debounceTimeout: 20});
-var buttonC = new Gpio(switchC, 'in', 'rising', {debounceTimeout: 20});
+var buttonA = new Gpio(switchA, 'in', 'rising', {debounceTimeout: 10}); //use GPIO pin 17 as input, and 'both' button presses, and releases should be handled
+var buttonB = new Gpio(switchB, 'in', 'rising', {debounceTimeout: 10});
+var buttonC = new Gpio(switchC, 'in', 'rising', {debounceTimeout: 10});
 
 var list = [4,10,16];
 var startTime;
 var delta;
-var count = 1;
+var count = 0;
+var pattern = "ABABCBABC";
+var next = getPattern();
 
 
 http.listen(8080); //listen to port 8080
@@ -27,6 +29,17 @@ function random(without) {
     return random(without);
   }else{
     return out;
+  }
+}
+
+function getPattern() {
+  switch (pattern[count]) {
+    case A:
+      return switchA;
+    case B:
+      return switchB;
+    case C:
+      return switchC;
   }
 }
 
@@ -42,7 +55,9 @@ function timestamp(sw) {
   console.log("startTime: " + startTime);
   console.log("endTime: " + endTime);
   startTime = endTime;
-  next = random(sw);
+  // next = random(sw);
+  count++;
+  next = getPattern();
   return next;
 }
 
@@ -62,7 +77,6 @@ function handler (req, res) { //create server
 io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
   startTime = new Date();
-  var next = list[Math.floor((Math.random()*list.length))]; //static variable for current status
   io.sockets.emit('next', next);
   io.sockets.emit('startTime', startTime);
   // console.log(next);
