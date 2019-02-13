@@ -36,7 +36,6 @@
 
     socket.on('startTime', function(data) { //get button status from client
       console.log(data);
-      stopwatch.start();
       // document.getElementById("startTime").innerHTML = data; //change checkbox $
       socket.emit("startTime", data); //send push button status to back to se$
     });
