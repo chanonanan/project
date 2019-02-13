@@ -63,8 +63,8 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
   startTime = new Date();
   var next = list[Math.floor((Math.random()*list.length))]; //static variable for current status
-  socket.emit('next', next);
-  socket.emit('startTime', startTime);
+  io.sockets.emit('next', next);
+  io.sockets.emit('startTime', startTime);
   // console.log(next);
   buttonA.watch(function (err, value) { //Watch for hardware interrupts on pushButton
     if (err) { //if an error
@@ -73,8 +73,8 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     }
     if(next == switchA){
       next = timestamp(switchA);
-      socket.emit('next', next); //send button status to client
-      socket.emit('delta', delta);
+      io.sockets.emit('next', next); //send button status to client
+      io.sockets.emit('delta', delta);
       // socket.emit('count', count);
       console.log('Next: ',next);
     }
@@ -86,8 +86,8 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     }
     if(next == switchB){
       next = timestamp(switchB);
-      socket.emit('next', next); //send button status to client
-      socket.emit('delta', delta);
+      io.sockets.emit('next', next); //send button status to client
+      io.sockets.emit('delta', delta);
       // socket.emit('count', count);
       console.log('Next: ',next);
     }
@@ -99,8 +99,8 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
     }
     if(next == switchC){
       next = timestamp(switchC);
-      socket.emit('next', next); //send button status to client
-      socket.emit('delta', delta);
+      io.sockets.emit('next', next); //send button status to client
+      io.sockets.emit('delta', delta);
       // socket.emit('count', count);
       console.log('Next: ',next);
     }
