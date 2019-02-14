@@ -227,5 +227,9 @@ process.on('SIGINT', function () { //on ctrl+c
   button1.unexport(); // Unexport Button GPIO to free resources
   button2.unexport(); // Unexport Button GPIO to free resources
   button3.unexport(); // Unexport Button GPIO to free resources
+  button4.unexport(); // Unexport Button GPIO to free resources
+  button5.unexport(); // Unexport Button GPIO to free resources
+  button6.unexport(); // Unexport Button GPIO to free resources
+  button7.unexport(); // Unexport Button GPIO to free resources
   process.exit(); //exit completely
 });
