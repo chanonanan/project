@@ -153,6 +153,62 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
       console.log('Next: ',next);
     }
   });
+
+  button4.watch(function (err, value) { //Watch for hardware interrupts on pushButton
+    if (err) { //if an error
+      console.error('There was an error', err); //output error message to console
+      return;
+    }
+    if(next == switch4){
+      next = timestamp(switch4);
+      io.sockets.emit('next', next); //send button status to client
+      io.sockets.emit('delta', delta);
+      // socket.emit('count', count);
+      console.log('Next: ',next);
+    }
+  });
+
+  button5.watch(function (err, value) { //Watch for hardware interrupts on pushButton
+    if (err) { //if an error
+      console.error('There was an error', err); //output error message to console
+      return;
+    }
+    if(next == switch5){
+      next = timestamp(switch5);
+      io.sockets.emit('next', next); //send button status to client
+      io.sockets.emit('delta', delta);
+      // socket.emit('count', count);
+      console.log('Next: ',next);
+    }
+  });
+
+  button6.watch(function (err, value) { //Watch for hardware interrupts on pushButton
+    if (err) { //if an error
+      console.error('There was an error', err); //output error message to console
+      return;
+    }
+    if(next == switch6){
+      next = timestamp(switch6);
+      io.sockets.emit('next', next); //send button status to client
+      io.sockets.emit('delta', delta);
+      // socket.emit('count', count);
+      console.log('Next: ',next);
+    }
+  });
+
+  button7.watch(function (err, value) { //Watch for hardware interrupts on pushButton
+    if (err) { //if an error
+      console.error('There was an error', err); //output error message to console
+      return;
+    }
+    if(next == switch7){
+      next = timestamp(switch7);
+      io.sockets.emit('next', next); //send button status to client
+      io.sockets.emit('delta', delta);
+      // socket.emit('count', count);
+      console.log('Next: ',next);
+    }
+  });
   socket.on('disconnect', () => {
     console.log('user disconnected');
     count = 0;
