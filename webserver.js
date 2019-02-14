@@ -128,14 +128,14 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
   io.sockets.emit('next', next);
   io.sockets.emit('startTime', startTime);
   // console.log(next);
-  button1.watch( matchButton(err, value, switch1) );
-  button2.watch( matchButton(err, value, switch2) );
-  button3.watch( matchButton(err, value, switch3) );
-  button4.watch( matchButton(err, value, switch4) );
-  button5.watch( matchButton(err, value, switch5) );
-  button6.watch( matchButton(err, value, switch6) );
-  button7.watch( matchButton(err, value, switch7) );
-  
+  button1.watch(function(err,value) { matchButton(err, value, switch1)} );
+  button2.watch(function(err,value){ matchButton(err, value, switch2)} );
+  button3.watch(function(err,value){ matchButton(err, value, switch3)} );
+  button4.watch(function(err,value){ matchButton(err, value, switch4)} );
+  button5.watch(function(err,value){ matchButton(err, value, switch5)} );
+  button6.watch(function(err,value){ matchButton(err, value, switch6)} );
+  button7.watch(function(err,value){ matchButton(err, value, switch7)} );
+
   socket.on('disconnect', () => {
     console.log('user disconnected');
     count = 0;
