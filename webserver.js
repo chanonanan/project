@@ -111,22 +111,31 @@ function matchButton(err, value,button){
     console.error('There was an error', err); //output error message to console
     return;
   }
+  
   if(next == button){
-    next = timestamp(button);
-    io.sockets.emit('next', next); //send button status to client
-    io.sockets.emit('delta', delta);
-    // socket.emit('count', count);
-    console.log('Next: ',next);
+    if(count == 0){
+      startTime = new Date();
+      count++;
+      next = getPattern();
+      io.sockets.emit('startTime', startTime);
+      io.sockets.emit('next', next); //send button status to client
+    }else{
+      next = timestamp(button);
+      io.sockets.emit('next', next); //send button status to client
+      io.sockets.emit('delta', delta);
+      // socket.emit('count', count);
+      console.log('Next: ',next);
+    }
   }
+  
 }
 
 // connect socket io
 io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
   next = getPattern();
-  startTime = new Date();
   io.sockets.emit('next', next);
-  io.sockets.emit('startTime', startTime);
+  
   // console.log(next);
   button1.watch(function(err,value) { matchButton(err, value, switch1)} );
   button2.watch(function(err,value){ matchButton(err, value, switch2)} );
