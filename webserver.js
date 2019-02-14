@@ -106,6 +106,20 @@ function handler (req, res) { //create server
   });
 }
 
+function matchButton(err, value,button){
+  if (err) { //if an error
+    console.error('There was an error', err); //output error message to console
+    return;
+  }
+  if(next == button){
+    next = timestamp(button);
+    io.sockets.emit('next', next); //send button status to client
+    io.sockets.emit('delta', delta);
+    // socket.emit('count', count);
+    console.log('Next: ',next);
+  }
+}
+
 // connect socket io
 io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
@@ -114,101 +128,14 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
   io.sockets.emit('next', next);
   io.sockets.emit('startTime', startTime);
   // console.log(next);
-  button1.watch(function (err, value) { //Watch for hardware interrupts on pushButton
-    if (err) { //if an error
-      console.error('There was an error', err); //output error message to console
-      return;
-    }
-    if(next == switch1){
-      next = timestamp(switch1);
-      io.sockets.emit('next', next); //send button status to client
-      io.sockets.emit('delta', delta);
-      // socket.emit('count', count);
-      console.log('Next: ',next);
-    }
-  });
-  button2.watch(function (err, value) { //Watch for hardware interrupts on pushButton
-    if (err) { //if an error
-      console.error('There was an error', err); //output error message to console
-      return;
-    }
-    if(next == switch2){
-      next = timestamp(switch2);
-      io.sockets.emit('next', next); //send button status to client
-      io.sockets.emit('delta', delta);
-      // socket.emit('count', count);
-      console.log('Next: ',next);
-    }
-  });
-  button3.watch(function (err, value) { //Watch for hardware interrupts on pushButton
-    if (err) { //if an error
-      console.error('There was an error', err); //output error message to console
-      return;
-    }
-    if(next == switch3){
-      next = timestamp(switch3);
-      io.sockets.emit('next', next); //send button status to client
-      io.sockets.emit('delta', delta);
-      // socket.emit('count', count);
-      console.log('Next: ',next);
-    }
-  });
-
-  button4.watch(function (err, value) { //Watch for hardware interrupts on pushButton
-    if (err) { //if an error
-      console.error('There was an error', err); //output error message to console
-      return;
-    }
-    if(next == switch4){
-      next = timestamp(switch4);
-      io.sockets.emit('next', next); //send button status to client
-      io.sockets.emit('delta', delta);
-      // socket.emit('count', count);
-      console.log('Next: ',next);
-    }
-  });
-
-  button5.watch(function (err, value) { //Watch for hardware interrupts on pushButton
-    if (err) { //if an error
-      console.error('There was an error', err); //output error message to console
-      return;
-    }
-    if(next == switch5){
-      next = timestamp(switch5);
-      io.sockets.emit('next', next); //send button status to client
-      io.sockets.emit('delta', delta);
-      // socket.emit('count', count);
-      console.log('Next: ',next);
-    }
-  });
-
-  button6.watch(function (err, value) { //Watch for hardware interrupts on pushButton
-    if (err) { //if an error
-      console.error('There was an error', err); //output error message to console
-      return;
-    }
-    if(next == switch6){
-      next = timestamp(switch6);
-      io.sockets.emit('next', next); //send button status to client
-      io.sockets.emit('delta', delta);
-      // socket.emit('count', count);
-      console.log('Next: ',next);
-    }
-  });
-
-  button7.watch(function (err, value) { //Watch for hardware interrupts on pushButton
-    if (err) { //if an error
-      console.error('There was an error', err); //output error message to console
-      return;
-    }
-    if(next == switch7){
-      next = timestamp(switch7);
-      io.sockets.emit('next', next); //send button status to client
-      io.sockets.emit('delta', delta);
-      // socket.emit('count', count);
-      console.log('Next: ',next);
-    }
-  });
+  button1.watch( matchButton(err, value, switch1) );
+  button2.watch( matchButton(err, value, switch2) );
+  button3.watch( matchButton(err, value, switch3) );
+  button4.watch( matchButton(err, value, switch4) );
+  button5.watch( matchButton(err, value, switch5) );
+  button6.watch( matchButton(err, value, switch6) );
+  button7.watch( matchButton(err, value, switch7) );
+  
   socket.on('disconnect', () => {
     console.log('user disconnected');
     count = 0;
