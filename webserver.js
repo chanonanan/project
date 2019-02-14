@@ -1,28 +1,51 @@
+//Http
 var http = require('http').createServer(handler); //require http server, and create server with function handler()
 var fs = require('fs'); //require filesystem module
 var io = require('socket.io')(http) //require socket.io module and pass the http object (server)
+
+//GPIO
 var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 // var LED = new Gpio(4, 'out'); //use GPIO pin 4 as output
 
+// Define GPIO port
+var switch1 = 2;
+var switch2 = 3;
+var switch3 = 4;
+var switch4 = 17;
+var switch5 = 27;
+var switch6 = 22;
+var switch7 = 10;
 
-var switchA = 4;
-var switchB = 10;
-var switchC = 16;
-var buttonA = new Gpio(switchA, 'in', 'rising', {debounceTimeout: 10}); //use GPIO pin 17 as input, and 'both' button presses, and releases should be handled
-var buttonB = new Gpio(switchB, 'in', 'rising', {debounceTimeout: 10});
-var buttonC = new Gpio(switchC, 'in', 'rising', {debounceTimeout: 10});
+//Define button to detect input
+var button1 = new Gpio(switch1, 'in', 'rising', {debounceTimeout: 10});
+var button2 = new Gpio(switch2, 'in', 'rising', {debounceTimeout: 10});
+var button3 = new Gpio(switch3, 'in', 'rising', {debounceTimeout: 10});
+var button4 = new Gpio(switch4, 'in', 'rising', {debounceTimeout: 10});
+var button5 = new Gpio(switch5, 'in', 'rising', {debounceTimeout: 10});
+var button6 = new Gpio(switch6, 'in', 'rising', {debounceTimeout: 10});
+var button7 = new Gpio(switch7, 'in', 'rising', {debounceTimeout: 10});
 
+//place switch
+// 2       3
+// 4  17  27
+// 22     10
+//match in code
+// 1       2
+// 3   4   5
+// 6       7
+
+//Variable
 var list = [4,10,16];
 var startTime;
 var delta;
 var count = 0;
-var pattern = "ABABCBABC";
+var pattern = "4142454746434";
 var next;
 
 
 http.listen(8080); //listen to port 8080
 
-
+// random next button
 function random(without) {
   var out = list[Math.floor((Math.random()*list.length))];
   if (out == without){
@@ -32,17 +55,27 @@ function random(without) {
   }
 }
 
+// get pattern for next button
 function getPattern() {
   switch (pattern[count]) {
-    case 'A':
-      return switchA;
-    case 'B':
-      return switchB;
-    case 'C':
-      return switchC;
+    case '1':
+      return switch1;
+    case '2':
+      return switch2;
+    case '3':
+      return switch3;
+    case '4':
+      return switch4;
+    case '5':
+      return switch5;
+    case '6':
+      return switch6;
+    case '7':
+      return switch7;
   }
 }
 
+//create time stamp
 function timestamp(sw) {
   var endTime = new Date();
   delta = endTime - startTime;
@@ -50,7 +83,6 @@ function timestamp(sw) {
   var d = new Date(delta);
   console.log('Timelab: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds() ); // "4:59"
   console.log(delta + 'millisec');
-  // console.log('Timelab: ' + Math.floor(intTime/1000) + ':' + Math.round((intTime/1000 - (Math.floor(intTime/1000)))*1000) + ' second');
   console.log("Time: " + startTime);
   console.log("startTime: " + startTime);
   console.log("endTime: " + endTime);
@@ -61,7 +93,7 @@ function timestamp(sw) {
   return next;
 }
 
-
+// handler for web service
 function handler (req, res) { //create server
   fs.readFile(__dirname + '/public/index.html', function(err, data) { //read file index.html in public folder
     if (err) {
@@ -74,6 +106,7 @@ function handler (req, res) { //create server
   });
 }
 
+// connect socket io
 io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
   next = getPattern();
@@ -81,39 +114,39 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
   io.sockets.emit('next', next);
   io.sockets.emit('startTime', startTime);
   // console.log(next);
-  buttonA.watch(function (err, value) { //Watch for hardware interrupts on pushButton
+  button1.watch(function (err, value) { //Watch for hardware interrupts on pushButton
     if (err) { //if an error
       console.error('There was an error', err); //output error message to console
       return;
     }
-    if(next == switchA){
-      next = timestamp(switchA);
+    if(next == switch1){
+      next = timestamp(switch1);
       io.sockets.emit('next', next); //send button status to client
       io.sockets.emit('delta', delta);
       // socket.emit('count', count);
       console.log('Next: ',next);
     }
   });
-  buttonB.watch(function (err, value) { //Watch for hardware interrupts on pushButton
+  button2.watch(function (err, value) { //Watch for hardware interrupts on pushButton
     if (err) { //if an error
       console.error('There was an error', err); //output error message to console
       return;
     }
-    if(next == switchB){
-      next = timestamp(switchB);
+    if(next == switch2){
+      next = timestamp(switch2);
       io.sockets.emit('next', next); //send button status to client
       io.sockets.emit('delta', delta);
       // socket.emit('count', count);
       console.log('Next: ',next);
     }
   });
-  buttonC.watch(function (err, value) { //Watch for hardware interrupts on pushButton
+  button3.watch(function (err, value) { //Watch for hardware interrupts on pushButton
     if (err) { //if an error
       console.error('There was an error', err); //output error message to console
       return;
     }
-    if(next == switchC){
-      next = timestamp(switchC);
+    if(next == switch3){
+      next = timestamp(switch3);
       io.sockets.emit('next', next); //send button status to client
       io.sockets.emit('delta', delta);
       // socket.emit('count', count);
@@ -135,8 +168,8 @@ io.sockets.on('connection', function (socket) {// WebSocket Connection
 process.on('SIGINT', function () { //on ctrl+c
   // LED.writeSync(0); // Turn LED off
   // LED.unexport(); // Unexport LED GPIO to free resources
-  buttonA.unexport(); // Unexport Button GPIO to free resources
-  buttonB.unexport(); // Unexport Button GPIO to free resources
-  buttonC.unexport(); // Unexport Button GPIO to free resources
+  button1.unexport(); // Unexport Button GPIO to free resources
+  button2.unexport(); // Unexport Button GPIO to free resources
+  button3.unexport(); // Unexport Button GPIO to free resources
   process.exit(); //exit completely
 });

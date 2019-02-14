@@ -66,12 +66,20 @@
 
     function getPlateNumber(gpio) {
       switch (gpio) {
+        case 2:
+          return 'ซ้ายหน้า';
+        case 3:
+          return 'ขวาหน้า';
         case 4:
-          return '1';
+          return 'ซ้าย';
+        case 17:
+          return 'กลาง';
+        case 27:
+          return 'ขวา';
+        case 22:
+          return 'ซ้ายหลัง';
         case 10:
-          return '2';
-        case 16:
-          return '3';
+          return 'ขวาหลัง';
       }
     }
   </script>
