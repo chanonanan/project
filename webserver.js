@@ -44,9 +44,9 @@ var startTime;
 var delta;
 var count = 0;
 // real
-// var pattern = "4142454746434";
+var pattern = "4142454746434";
 // test
-var pattern = "123123123";
+// var pattern = "123123123";
 var next;
 var oldButton;
 
