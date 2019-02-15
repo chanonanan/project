@@ -43,7 +43,10 @@ var list = [4,10,16];
 var startTime;
 var delta;
 var count = 0;
-var pattern = "4142454746434";
+// real
+// var pattern = "4142454746434";
+// test
+var pattern = "123123123";
 var next;
 var oldButton;
 
@@ -61,8 +64,8 @@ function random(without) {
 }
 
 // get pattern for next button
-function getPattern() {
-  switch (pattern[count]) {
+function getPattern(c) {
+  switch (pattern[c]) {
     case '1':
       return switch1;
     case '2':
@@ -94,7 +97,7 @@ function timestamp(sw) {
   startTime = endTime;
   // next = random(sw);
   count++;
-  next = getPattern();
+  next = getPattern(count);
   return next;
 }
 
@@ -121,11 +124,11 @@ function matchButton(err, value,button){
     if(count == 0){
       startTime = new Date();
       count++;
-      next = getPattern();
+      next = getPattern(count);
       io.sockets.emit('startTime', startTime);
       io.sockets.emit('next', next); //send button status to client
     }else{
-      if(pattern[count-1] == oldButton){
+      if(getPattern(count-1) == oldButton){
         next = timestamp(button);
         io.sockets.emit('next', next); //send button status to client
         io.sockets.emit('delta', delta);
@@ -142,7 +145,7 @@ function matchButton(err, value,button){
 // connect socket io
 io.sockets.on('connection', function (socket) {// WebSocket Connection
   console.log('user connected');
-  next = getPattern();
+  next = getPattern(count);
   io.sockets.emit('next', next);
   
   // console.log(next);
