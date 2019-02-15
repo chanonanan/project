@@ -11,13 +11,13 @@ var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 var switch1 = 2;
 var switch2 = 3;
 var switch3 = 4;
-var switch4 = 17;
-var switch5 = 27;
-var switch6 = 22;
-var switch7 = 10;
+var switch4 = 8;
+var switch5 = 10;
+var switch6 = 15;
+var switch7 = 17;
 
 var debounce = 250;
-var edge = 'both';
+var edge = 'rising';
 
 //Define button to detect input
 var button1 = new Gpio(switch1, 'in', edge, {debounceTimeout: debounce});
