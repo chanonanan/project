@@ -16,14 +16,18 @@ var switch5 = 27;
 var switch6 = 22;
 var switch7 = 10;
 
+var debounce = 250;
+var edge = 'both';
+
 //Define button to detect input
-var button1 = new Gpio(switch1, 'in', 'rising', {debounceTimeout: 10});
-var button2 = new Gpio(switch2, 'in', 'rising', {debounceTimeout: 10});
-var button3 = new Gpio(switch3, 'in', 'rising', {debounceTimeout: 10});
-var button4 = new Gpio(switch4, 'in', 'rising', {debounceTimeout: 10});
-var button5 = new Gpio(switch5, 'in', 'rising', {debounceTimeout: 10});
-var button6 = new Gpio(switch6, 'in', 'rising', {debounceTimeout: 10});
-var button7 = new Gpio(switch7, 'in', 'rising', {debounceTimeout: 10});
+var button1 = new Gpio(switch1, 'in', edge, {debounceTimeout: debounce});
+var button2 = new Gpio(switch2, 'in', edge, {debounceTimeout: debounce});
+var button3 = new Gpio(switch3, 'in', edge, {debounceTimeout: debounce});
+var button4 = new Gpio(switch4, 'in', edge, {debounceTimeout: debounce});
+var button5 = new Gpio(switch5, 'in', edge, {debounceTimeout: debounce});
+var button6 = new Gpio(switch6, 'in', edge, {debounceTimeout: debounce});
+var button7 = new Gpio(switch7, 'in', edge, {debounceTimeout: debounce});
+
 
 //place switch
 // 2       3
@@ -41,6 +45,7 @@ var delta;
 var count = 0;
 var pattern = "4142454746434";
 var next;
+var oldButton;
 
 
 http.listen(8080); //listen to port 8080
@@ -111,7 +116,7 @@ function matchButton(err, value,button){
     console.error('There was an error', err); //output error message to console
     return;
   }
-  
+
   if(next == button){
     if(count == 0){
       startTime = new Date();
@@ -120,12 +125,16 @@ function matchButton(err, value,button){
       io.sockets.emit('startTime', startTime);
       io.sockets.emit('next', next); //send button status to client
     }else{
-      next = timestamp(button);
-      io.sockets.emit('next', next); //send button status to client
-      io.sockets.emit('delta', delta);
-      // socket.emit('count', count);
-      console.log('Next: ',next);
+      if(pattern[count-1] == oldButton){
+        next = timestamp(button);
+        io.sockets.emit('next', next); //send button status to client
+        io.sockets.emit('delta', delta);
+        // socket.emit('count', count);
+        console.log('Next: ',next);
+      }
+      
     }
+    oldButton = button;
   }
   
 }
