@@ -3,21 +3,21 @@
     "username": "admin",
     "password": "admin",
     "database": "database_development",
-    "host": "192.168.43.103",
+    "host": "192.168.8.100",
     "dialect": "mysql"
   },
   "test": {
     "username": "admin",
     "password": "admin",
     "database": "database_test",
-    "host": "192.168.43.103",
+    "host": "192.168.8.100",
     "dialect": "mysql"
   },
   "production": {
     "username": "admin",
     "password": "admin",
     "database": "database_production",
-    "host": "192.168.43.103",
+    "host": "192.168.8.100",
     "dialect": "mysql"
   }
 }
