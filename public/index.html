@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+  </head>
 
 <body>
   <h1>Demo switch</h1>
-  <nav class="controls">
-    <a href="#" class="button" onClick="start();">Start</a>
-    <a href="#" class="button" onClick="stop();">Stop</a>
-    <a href="#" class="button" onClick="restart();">Restart</a>
-  </nav>
   <h1 id="startTime"></h1>
   <p>Next : <font id="next"></font></p>
   <table id="timelab">
@@ -24,6 +23,12 @@
 </table>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script> <!-- include socket.io client side script -->
   <script>
+    function addZero(x, n) {
+      while (x.toString().length < n) {
+        x = "0" + x;
+      }
+      return x;
+    }
     var socket = io(); //load socket.io-client and connect to the host that serves the page
     var tableRef = document.getElementById('timelab').getElementsByTagName('tbody')[0];
 
@@ -41,7 +46,7 @@
 
     socket.on('next', function(data) { //get button status from client
       console.log(data);
-      document.getElementById("next").innerHTML = data; //change checkbox $
+      document.getElementById("next").innerHTML = getPlateNumber(data); //change checkbox $
       socket.emit("next", data); //send push button status to back to se$
     });
 
@@ -63,31 +68,23 @@
       socket.emit("delta", data); //send push button status to back to se$
     });
 
-    socket.on('running', function(data) { //get button status from client
-      console.log(data);
-      socket.emit("running", data); //send push button status to back to se$
-    });
-
-    
-    function start() {
-      console.log('running...',true);
-      socket.emit("running", true );
-    }
-
-    function stop() {
-      console.log('running...',false);
-      socket.emit("running", false );
-    }
-
-    function restart() {
-
-    }
-
-    function addZero(x, n) {
-        while (x.toString().length < n) {
-          x = "0" + x;
-        }
-        return x;
+    function getPlateNumber(gpio) {
+      switch (gpio) {
+        case 2:
+          return 'ซ้ายหน้า';
+        case 3:
+          return 'ขวาหน้า';
+        case 4:
+          return 'ซ้าย';
+        case 17:
+          return 'กลาง';
+        case 27:
+          return 'ขวา';
+        case 22:
+          return 'ซ้ายหลัง';
+        case 10:
+          return 'ขวาหลัง';
+      }
     }
   </script>
 </html>
