@@ -17,8 +17,8 @@ module.exports = {
       player_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Users', // name of Target model
-          key: 'id', // key in Target model that we're referencing
+          model: 'Users',
+          key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
@@ -26,8 +26,8 @@ module.exports = {
       coach_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Users', // name of Target model
-          key: 'id', // key in Target model that we're referencing
+          model: 'Users',
+          key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
@@ -35,8 +35,8 @@ module.exports = {
       patthen_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Patthens', // name of Target model
-          key: 'id', // key in Target model that we're referencing
+          model: 'Patthens',
+          key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
