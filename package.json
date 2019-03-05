@@ -1,0 +1,42 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "DB user : admin\r DB pass : admin\r DB on PI",
+  "main": "app.js",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.5.0",
+    "mongodb": "^3.1.13",
+    "morgan": "^1.9.1",
+    "mysql": "^2.16.0",
+    "mysql2": "^1.6.5",
+    "nodemon": "^1.18.10",
+    "onoff": "^3.2.2",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "sequelize": "^4.42.1",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env DEBUG=express-sequelize nodemon ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chanonanan/project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chanonanan/project/issues"
+  },
+  "homepage": "https://github.com/chanonanan/project#readme"
+}

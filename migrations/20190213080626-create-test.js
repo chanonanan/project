@@ -9,10 +9,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       test_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       player_id: {
         type: Sequelize.INTEGER,

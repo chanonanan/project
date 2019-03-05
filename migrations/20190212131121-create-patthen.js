@@ -9,10 +9,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       patthen_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       patthen: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       created_by: {
         type: Sequelize.INTEGER,
@@ -24,7 +26,8 @@ module.exports = {
         onDelete: 'SET NULL',
       },
       length: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
