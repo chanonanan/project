@@ -6,9 +6,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Test.associate = function(models) {
     // associations can be defined here
-    Test.belongsTo(models.User, {foreignKey: 'player_id'});
-    Test.belongsTo(models.User, {foreignKey: 'coach_id'});
-    Test.belongsTo(models.Patthen, {foreignKey: 'patthen_id'});
+    Test.belongsTo(models.User, {foreignKey: 'player_id', as: 'Player'});
+    Test.belongsTo(models.User, {foreignKey: 'coach_id', as: 'Coach'});
+    Test.belongsTo(models.Patthen, {foreignKey: 'patthen_id', as: 'Patthen'});
   };
   return Test;
 };

@@ -1,34 +1,30 @@
 var models = require('../../models');
 const Op = require('Sequelize').Op;
 module.exports = {
-    getPlayer: (req, res, next) => {
+    getPatthen: (req, res, next) => {
         console.log('req', req.body.name)
-        models.User.findAll({
+        models.Patthen.findAll({
             limit: 10,
             where: {
-                role_id: 1,
                 [Op.or]: [
-                    { firstname: { [Op.like]: '%' + req.body.name + '%' } },
-                    { lastname: { [Op.like]: '%' + req.body.name + '%' } },
-                    { email: { [Op.like]: '%' + req.body.name + '%' } },
-                    { username: { [Op.like]: '%' + req.body.name + '%' } }
+                    { patthen_name: { [Op.like]: '%' + req.body.search + '%' } },
+                    { patthen: { [Op.like]: '%' + req.body.search + '%' } }
                 ]
-            },
-            attributes: { exclude: ['password','role_id','updatedAt','createdAt'] },
-        }).then(user => {
-            console.log('found', user)
+            }
+        }).then(patthen => {
+            console.log('found', patthen)
             var s = true;
-            if (!user) s = false;
+            if (!patthen) s = false;
             res.json({
                 successful: s,
-                message: "user filter",
-                data: user
+                message: "patthen filter",
+                data: patthen
             });
         }).catch(err => {
             console.log('errr')
             res.json({
                 successful: false,
-                message: "ไม่พบผู้ใช้นี้"
+                message: "ไม่พบแพทเทิร์น"
             });
         });
     },

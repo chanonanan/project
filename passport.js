@@ -10,14 +10,18 @@ passport.use(new LocalStrategy({
     passwordField: 'password'
 },
     function (username, password, cb) {
-        console.log(username)
-        console.log(password)
+        // console.log(username)
+        // console.log(password)
+        // bcrypt.genSalt(10, function (err, salt) {
+        //     bcrypt.hash(password, salt, function (err, hash) {
+        //         console.log(hash, password)
+        //     })
+        // });
         return models.User.findOne({
             where: {
                 username: username
             }
-        })
-            .then(user => {
+        }).then(user => {
                 console.log(user.password,password)
                 if (!user) {
                     console.log('asdsadas')

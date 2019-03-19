@@ -15,17 +15,17 @@ var models = require('../models');
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-  /**
-   * Create HTTP server.
-   */
+/**
+ * Create HTTP server.
+ */
 var server = http.createServer(app);
 
 // require('../remote/server/mstsc')(server);
-models.sequelize.sync().then(function() {
+models.sequelize.sync().then(function () {
   /**
    * Listen on provided port, on all network interfaces.
    */
-  server.listen(port, function() {
+  server.listen(port, function () {
     debug('Express server listening on port ' + server.address().port);
   });
   server.on('error', onError);
@@ -91,3 +91,25 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+var io = require('socket.io').listen(server);
+
+io.sockets.on('connection', function (socket) {
+  console.log('user connected');
+  // io.sockets.emit('start-test', "true");
+  io.sockets.emit('patthen', { next: 'D', text: "Start" })
+
+  socket.on('disconnect', function () {
+    console.log('user disconnected');
+  });
+
+  socket.on('message', function (message) {
+    console.log(message);
+    io.sockets.emit('message', { type: 'new-message', text: "message" })
+  })
+
+  socket.on('start', function (message) {
+    console.log(message);
+    io.sockets.emit('start', { type: 'new-message', text: "message" })
+  })
+});
