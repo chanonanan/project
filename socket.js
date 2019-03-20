@@ -18,13 +18,13 @@ var debounce = 250;
 var edge = 'rising';
 
 //Define button to detect input
-var button1 = new Gpio(switch1, 'in', edge, {debounceTimeout: debounce});
-var button2 = new Gpio(switch2, 'in', edge, {debounceTimeout: debounce});
-var button3 = new Gpio(switch3, 'in', edge, {debounceTimeout: debounce});
-var button4 = new Gpio(switch4, 'in', edge, {debounceTimeout: debounce});
-var button5 = new Gpio(switch5, 'in', edge, {debounceTimeout: debounce});
-var button6 = new Gpio(switch6, 'in', edge, {debounceTimeout: debounce});
-var button7 = new Gpio(switch7, 'in', edge, {debounceTimeout: debounce});
+var button1 = new Gpio(switch1, 'in', edge, { debounceTimeout: debounce });
+var button2 = new Gpio(switch2, 'in', edge, { debounceTimeout: debounce });
+var button3 = new Gpio(switch3, 'in', edge, { debounceTimeout: debounce });
+var button4 = new Gpio(switch4, 'in', edge, { debounceTimeout: debounce });
+var button5 = new Gpio(switch5, 'in', edge, { debounceTimeout: debounce });
+var button6 = new Gpio(switch6, 'in', edge, { debounceTimeout: debounce });
+var button7 = new Gpio(switch7, 'in', edge, { debounceTimeout: debounce });
 var LED = new Gpio(4, 'out'); //use GPIO pin 4 as output
 
 //place switch
@@ -38,6 +38,7 @@ var LED = new Gpio(4, 'out'); //use GPIO pin 4 as output
 
 //Variable
 var startTime;
+var start;
 var delta;
 var count = 0;
 var length = 0;
@@ -88,7 +89,7 @@ function getPlateNumber(c) {
 }
 
 //create time stamp
-function timestamp(sw,io) {
+function timestamp(sw, io) {
     var endTime = new Date();
     delta = endTime - startTime;
     var d = new Date(delta);
@@ -98,15 +99,24 @@ function timestamp(sw,io) {
     console.log("startTime: " + startTime);
     console.log("endTime: " + endTime);
     console.log("count: " + count);
-    io.sockets.emit('lap', { lap: count, time: [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()], from: getPlateNumber(pattern[count--]), to: getPlateNumber(pattern[count]) });
+    var old_count = count - 1;
+    io.sockets.emit('lap', { lap: count, time: [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()], from: getPlateNumber(pattern[old_count]), to: getPlateNumber(pattern[count]) });
     startTime = endTime;
     // next = random(sw);
     count++;
+    if (count == length) {
+        var stop = new Date();
+        var diff = stop - start;
+        var d = new Date(diff);
+        console.log('Stop: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds()); // "4:59"
+        io.sockets.emit('stop', [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()])
+        finish();
+    }
     next = getPattern(count);
     return next;
 }
 
-function matchButton(err, value, button,io) {
+function matchButton(err, value, button, io) {
     if (err) { //if an error
         console.error('There was an error', err); //output error message to console
         return;
@@ -115,6 +125,7 @@ function matchButton(err, value, button,io) {
     if (next == button) {
         if (count == 0) {
             startTime = new Date();
+            start = startTime;
             count++;
             next = getPattern(count);
             io.sockets.emit('start', true);
@@ -122,13 +133,13 @@ function matchButton(err, value, button,io) {
             io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Next" })
         } else {
             if (getPattern(count - 1) == oldButton) {
-                next = timestamp(button,io);
+                next = timestamp(button, io);
                 // io.sockets.emit('next', next); //send button status to client
                 // io.sockets.emit('delta', delta);
                 // socket.emit('count', count);
                 console.log('Next: ', next);
                 io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Start" })
-                
+
             }
 
         }
@@ -137,7 +148,7 @@ function matchButton(err, value, button,io) {
 
 }
 
-process.on('SIGINT', function () { //on ctrl+c
+function finish() {
     // LED.writeSync(0); // Turn LED off
     // LED.unexport(); // Unexport LED GPIO to free resources
     button1.unexport(); // Unexport Button GPIO to free resources
@@ -147,6 +158,10 @@ process.on('SIGINT', function () { //on ctrl+c
     button5.unexport(); // Unexport Button GPIO to free resources
     button6.unexport(); // Unexport Button GPIO to free resources
     button7.unexport(); // Unexport Button GPIO to free resources
+}
+
+process.on('SIGINT', function () { //on ctrl+c
+    finish();
     process.exit(); //exit completely
 });
 
@@ -168,7 +183,6 @@ module.exports = (io) => {
         // io.sockets.emit('start-test', "true");
         // io.sockets.emit('lap', { lap: 1, time: 0.334, from: 2, to: 4});
         // ttt(io);
-        var start;
         socket.on('start', function (message) {
             start = new Date();
             io.sockets.emit('start', true);
