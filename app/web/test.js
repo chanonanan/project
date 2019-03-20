@@ -5,29 +5,29 @@ module.exports = {
         var date = req.body.date;
         var player_id = req.body.player_id;
         var coach_id = req.body.coach_id;
-        var patthen_id = req.body.patthen_id;
-        var patthen_name = req.body.patthen_name;
-        var patthen = req.body.patthen;
+        var pattern_id = req.body.pattern_id;
+        var pattern_name = req.body.pattern_name;
+        var pattern = req.body.pattern;
         if (!player_id || !coach_id) {
             res.json({
                 successful: false,
                 message: "create fail"
             });
         } else {
-            if (!patthen_id) {
-                models.Patthen.create({
-                    patthen_name: patthen_name,
-                    patthen: patthen,
+            if (!pattern_id) {
+                models.Pattern.create({
+                    pattern_name: pattern_name,
+                    pattern: pattern,
                     created_by: coach_id,
-                    length: patthen.length
-                }).then(patthen => {
-                    patthen_id = patthen.id;
+                    length: pattern.length
+                }).then(pattern => {
+                    pattern_id = pattern.id;
                     models.Test.create({
                         test_name: test_name,
                         date: date,
                         player_id: player_id,
                         coach_id: coach_id,
-                        patthen_id: patthen_id
+                        pattern_id: pattern_id
                     }).then(resu => {
                         res.json({
                             successful: true,
@@ -52,7 +52,7 @@ module.exports = {
                     date: date,
                     player_id: player_id,
                     coach_id: coach_id,
-                    patthen_id: patthen_id
+                    pattern_id: pattern_id
                 }).then(resu => {
                     res.json({
                         successful: true,
@@ -87,12 +87,13 @@ module.exports = {
                     // attributes: ['firstname'],
                 },
                 {
-                    model: models.Patthen,
-                    as: 'Patthen',
+                    model: models.Pattern,
+                    as: 'Pattern',
                     // attributes: ['firstname'],
                 }
             ]
         }).then(test => {
+            console.log("test",test)
             if (test) {
                 // models.User.findOne({
                 //     where: { id: player_id }

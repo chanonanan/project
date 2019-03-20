@@ -34,10 +34,10 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
-      patthen_id: {
+      pattern_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Patthens',
+          model: 'Patterns',
           key: 'id',
         },
         onUpdate: 'CASCADE',

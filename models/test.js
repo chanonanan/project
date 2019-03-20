@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Test.belongsTo(models.User, {foreignKey: 'player_id', as: 'Player'});
     Test.belongsTo(models.User, {foreignKey: 'coach_id', as: 'Coach'});
-    Test.belongsTo(models.Patthen, {foreignKey: 'patthen_id', as: 'Patthen'});
+    Test.belongsTo(models.Pattern, {foreignKey: 'pattern_id', as: 'Pattern'});
   };
   return Test;
 };

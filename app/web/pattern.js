@@ -1,24 +1,24 @@
 var models = require('../../models');
 const Op = require('Sequelize').Op;
 module.exports = {
-    getPatthen: (req, res, next) => {
+    getPattern: (req, res, next) => {
         console.log('req', req.body.name)
-        models.Patthen.findAll({
+        models.Pattern.findAll({
             limit: 10,
             where: {
                 [Op.or]: [
-                    { patthen_name: { [Op.like]: '%' + req.body.search + '%' } },
-                    { patthen: { [Op.like]: '%' + req.body.search + '%' } }
+                    { pattern_name: { [Op.like]: '%' + req.body.search + '%' } },
+                    { pattern: { [Op.like]: '%' + req.body.search + '%' } }
                 ]
             }
-        }).then(patthen => {
-            console.log('found', patthen)
+        }).then(pattern => {
+            console.log('found', pattern)
             var s = true;
-            if (!patthen) s = false;
+            if (!pattern) s = false;
             res.json({
                 successful: s,
-                message: "patthen filter",
-                data: patthen
+                message: "pattern filter",
+                data: pattern
             });
         }).catch(err => {
             console.log('errr')

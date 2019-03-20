@@ -1,18 +1,18 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Patthens', {
+    return queryInterface.createTable('Patterns', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      patthen_name: {
+      pattern_name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      patthen: {
+      pattern: {
         type: Sequelize.STRING,
         allowNull: false
       },
@@ -40,6 +40,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Patthens');
+    return queryInterface.dropTable('Patterns');
   }
 };
