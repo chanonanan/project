@@ -97,7 +97,8 @@ function timestamp(sw,io) {
     console.log("Time: " + startTime);
     console.log("startTime: " + startTime);
     console.log("endTime: " + endTime);
-    io.sockets.emit('lap', { lap: count, time: delta, from: getPlateNumber(pattern[count--]), to: getPlateNumber(pattern[count]) });
+    console.log("count: " + count);
+    io.sockets.emit('lap', { lap: count, time: [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()], from: getPlateNumber(pattern[count--]), to: getPlateNumber(pattern[count]) });
     startTime = endTime;
     // next = random(sw);
     count++;
@@ -166,7 +167,7 @@ module.exports = (io) => {
         console.log('count', count);
         // io.sockets.emit('start-test', "true");
         // io.sockets.emit('lap', { lap: 1, time: 0.334, from: 2, to: 4});
-        ttt(io);
+        // ttt(io);
         var start;
         socket.on('start', function (message) {
             start = new Date();
