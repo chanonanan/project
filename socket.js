@@ -48,7 +48,7 @@ var pattern = "4142454746434";
 // var pattern = "123123123";
 var next;
 var oldButton;
-var finish = false;
+var isFinish = false;
 
 // get pattern for next button
 function getPattern(c) {
@@ -111,7 +111,7 @@ function timestamp(sw, io) {
         var d = new Date(diff);
         console.log('Stop: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds()); // "4:59"
         io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()], text: "Stop" })
-        if(!finish){
+        if(!isFinish){
             finish();
         }
     }
@@ -152,7 +152,7 @@ function matchButton(err, value, button, io) {
 }
 
 function finish() {
-    finish = true;
+    isFinish = true;
     // LED.writeSync(0); // Turn LED off
     // LED.unexport(); // Unexport LED GPIO to free resources
     button1.unexport(); // Unexport Button GPIO to free resources
@@ -165,7 +165,7 @@ function finish() {
 }
 
 process.on('SIGINT', function () { //on ctrl+c
-    if(!finish){
+    if(!isFinish){
         finish();
     }
     process.exit(); //exit completely
