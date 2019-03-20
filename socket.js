@@ -114,6 +114,8 @@ function timestamp(sw, io) {
         if(!isFinish){
             finish();
         }
+    }else{
+        io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Next" })
     }
     next = getPattern(count);
     return next;
@@ -141,8 +143,7 @@ function matchButton(err, value, button, io) {
                 // io.sockets.emit('delta', delta);
                 // socket.emit('count', count);
                 console.log('Next: ', next);
-                io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Next" })
-
+                
             }
 
         }
