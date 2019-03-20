@@ -1,5 +1,5 @@
 var models = require('../../models');
-const Op = require('Sequelize').Op;
+const Op = require('sequelize').Op;
 module.exports = {
     getPattern: (req, res, next) => {
         console.log('req', req.body.name)

@@ -1,5 +1,5 @@
 var models = require('../../models');
-const Op = require('Sequelize').Op;
+const Op = require('sequelize').Op;
 module.exports = {
     getPlayer: (req, res, next) => {
         console.log('req', req.body.name)
