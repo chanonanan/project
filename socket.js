@@ -18,13 +18,13 @@ var debounce = 250;
 var edge = 'rising';
 
 //Define button to detect input
-var button1 = new Gpio(switch1, 'in', edge, { debounceTimeout: debounce });
-var button2 = new Gpio(switch2, 'in', edge, { debounceTimeout: debounce });
-var button3 = new Gpio(switch3, 'in', edge, { debounceTimeout: debounce });
-var button4 = new Gpio(switch4, 'in', edge, { debounceTimeout: debounce });
-var button5 = new Gpio(switch5, 'in', edge, { debounceTimeout: debounce });
-var button6 = new Gpio(switch6, 'in', edge, { debounceTimeout: debounce });
-var button7 = new Gpio(switch7, 'in', edge, { debounceTimeout: debounce });
+var button1;
+var button2;
+var button3;
+var button4;
+var button5;
+var button6;
+var button7;
 var LED = new Gpio(4, 'out'); //use GPIO pin 4 as output
 
 //place switch
@@ -111,21 +111,24 @@ function timestamp(sw, io) {
         var d = new Date(diff);
         console.log('Stop: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds()); // "4:59"
         var ms;
-        if(d.getUTCMilliseconds()<100){
-            ms = '0'+ d.getUTCMilliseconds();
-        }else{
+        if (d.getUTCMilliseconds() < 100) {
+            ms = '0' + d.getUTCMilliseconds();
+        } else {
             ms = d.getUTCMilliseconds().toString();
         }
         var front_ms = ms[0] + ms[1];
         var last_ms = ms[2];
         io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), parseInt(front_ms), parseInt(last_ms)], text: "Stop" })
-        if(!isFinish){
+        if (!isFinish) {
             finish();
         }
-    }else{
-        io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Next" })
+        next = null;
+        count = 0;
+    } else {
+        io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Next" });
+        next = getPattern(count);
     }
-    next = getPattern(count);
+
     return next;
 }
 
@@ -151,7 +154,7 @@ function matchButton(err, value, button, io) {
                 // io.sockets.emit('delta', delta);
                 // socket.emit('count', count);
                 console.log('Next: ', next);
-                
+
             }
 
         }
@@ -174,7 +177,7 @@ function finish() {
 }
 
 process.on('SIGINT', function () { //on ctrl+c
-    if(!isFinish){
+    if (!isFinish) {
         finish();
     }
     process.exit(); //exit completely
@@ -185,14 +188,31 @@ function ttt(io) {
     io.sockets.emit('lap', { lap: 1, time: 0.334, from: getPlateNumber('2'), to: getPlateNumber('4') });
 }
 
-
+function initButton(io) {
+    button1 = new Gpio(switch1, 'in', edge, { debounceTimeout: debounce });
+    button2 = new Gpio(switch2, 'in', edge, { debounceTimeout: debounce });
+    button3 = new Gpio(switch3, 'in', edge, { debounceTimeout: debounce });
+    button4 = new Gpio(switch4, 'in', edge, { debounceTimeout: debounce });
+    button5 = new Gpio(switch5, 'in', edge, { debounceTimeout: debounce });
+    button6 = new Gpio(switch6, 'in', edge, { debounceTimeout: debounce });
+    button7 = new Gpio(switch7, 'in', edge, { debounceTimeout: debounce });
+    button1.watch(function (err, value) { matchButton(err, value, switch1, io) });
+    button2.watch(function (err, value) { matchButton(err, value, switch2, io) });
+    button3.watch(function (err, value) { matchButton(err, value, switch3, io) });
+    button4.watch(function (err, value) { matchButton(err, value, switch4, io) });
+    button5.watch(function (err, value) { matchButton(err, value, switch5, io) });
+    button6.watch(function (err, value) { matchButton(err, value, switch6, io) });
+    button7.watch(function (err, value) { matchButton(err, value, switch7, io) });
+}
 
 module.exports = (io) => {
     // console.log('IO: ', io);
 
     io.on('connection', function (socket) {
         console.log('user connected');
+        count = 0;
         next = getPattern(count);
+        isFinish = false;
         console.log('next', next);
         console.log('count', count);
         // io.sockets.emit('start-test', "true");
@@ -227,13 +247,8 @@ module.exports = (io) => {
             pattern = test.Pattern.pattern;
             length = test.Pattern.length;
             io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Start" })
-            button1.watch(function (err, value) { matchButton(err, value, switch1, io) });
-            button2.watch(function (err, value) { matchButton(err, value, switch2, io) });
-            button3.watch(function (err, value) { matchButton(err, value, switch3, io) });
-            button4.watch(function (err, value) { matchButton(err, value, switch4, io) });
-            button5.watch(function (err, value) { matchButton(err, value, switch5, io) });
-            button6.watch(function (err, value) { matchButton(err, value, switch6, io) });
-            button7.watch(function (err, value) { matchButton(err, value, switch7, io) });
+            initButton(io);
+
         })
     });
 
