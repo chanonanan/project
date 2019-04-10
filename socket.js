@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 //GPIO
-var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
+// var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 
 
 // Define GPIO port
@@ -25,7 +25,7 @@ var button4;
 var button5;
 var button6;
 var button7;
-var LED = new Gpio(4, 'out'); //use GPIO pin 4 as output
+// var LED = new Gpio(4, 'out'); //use GPIO pin 4 as output
 
 //place switch
 // 2       3
@@ -247,7 +247,7 @@ module.exports = (io) => {
             pattern = test.Pattern.pattern;
             length = test.Pattern.length;
             io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Start" })
-            initButton(io);
+            // initButton(io);
 
         })
     });

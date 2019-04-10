@@ -1,5 +1,7 @@
 var models = require('../../models');
 const Op = require('sequelize').Op;
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 module.exports = {
     getPlayer: (req, res, next) => {
         console.log('req', req.body.name)
@@ -52,5 +54,63 @@ module.exports = {
                 message: "get own"
             });
         });
+    },
+    store: (req, res, next) => {
+        var username = req.body.username;
+        var password = req.body.password;
+        var firstname = req.body.firstname;
+        var lastname = req.body.lastname;
+        var email = req.body.email;
+        var role_id = req.body.role_id;
+        if (!username || !password) {
+            res.json({
+                successful: false,
+                message: "create fail3"
+            });
+        } else {
+            models.User.findOne({
+                where: { username: username }
+            }).then(user => {
+                if (user) {
+                    res.json({
+                        successful: false,
+                        message: "มีชื่อผู้ใช้นี้อยู่แล้วในระบบ"
+                    });
+                } else {
+                    bcrypt.genSalt(saltRounds, function (err, salt) {
+                        bcrypt.hash(password, salt, function (err, hash) {
+                            if (hash) {
+                                models.User.create({
+                                    username: username,
+                                    password: hash,
+                                    firstname: firstname,
+                                    lastname: lastname,
+                                    email: email,
+                                    role_id: role_id
+                                }).then(resu => {
+                                    res.json({
+                                        successful: true,
+                                        message: "create success",
+                                        data: resu
+                                    });
+                                });
+
+                            } else {
+                                res.json({
+                                    successful: false,
+                                    message: "create fail2"
+                                });
+                            }
+                        });
+                    });
+                }
+            }).catch(err => {
+                res.json({
+                    successful: false,
+                    message: "create fail:" + err
+                });
+            });
+        }
+
     },
 }

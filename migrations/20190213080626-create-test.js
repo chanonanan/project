@@ -12,6 +12,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      style: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       date: {
         type: Sequelize.DATE,
         allowNull: false
