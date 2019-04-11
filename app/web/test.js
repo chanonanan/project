@@ -3,11 +3,13 @@ module.exports = {
     store: (req, res, next) => {
         var test_name = req.body.test_name;
         var date = req.body.date;
+        var style = req.body.style;
         var player_id = req.body.player_id;
         var coach_id = req.body.coach_id;
         var pattern_id = req.body.pattern_id;
         var pattern_name = req.body.pattern_name;
         var pattern = req.body.pattern;
+        console.log("asdas",pattern_id,pattern_name,pattern)
         if (!player_id || !coach_id) {
             res.json({
                 successful: false,
@@ -15,16 +17,23 @@ module.exports = {
             });
         } else {
             if (!pattern_id) {
+                console.log("null patt id")
+                var length = null;
+                if(pattern){
+                    length = pattern.length; 
+                }
                 models.Pattern.create({
                     pattern_name: pattern_name,
                     pattern: pattern,
                     created_by: coach_id,
-                    length: pattern.length
+                    length: length
                 }).then(pattern => {
+                    console.log("pattern.id")
                     pattern_id = pattern.id;
                     models.Test.create({
                         test_name: test_name,
                         date: date,
+                        style: style,
                         player_id: player_id,
                         coach_id: coach_id,
                         pattern_id: pattern_id
@@ -50,6 +59,7 @@ module.exports = {
                 models.Test.create({
                     test_name: test_name,
                     date: date,
+                    style: style,
                     player_id: player_id,
                     coach_id: coach_id,
                     pattern_id: pattern_id

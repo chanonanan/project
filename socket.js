@@ -211,10 +211,10 @@ module.exports = (io) => {
     io.on('connection', function (socket) {
         console.log('user connected');
         count = 0;
-        next = getPattern(count);
+        next = null;
         isFinish = false;
-        console.log('next', next);
-        console.log('count', count);
+        // console.log('next', next);
+        // console.log('count', count);
         // io.sockets.emit('start-test', "true");
         // io.sockets.emit('lap', { lap: 1, time: 0.334, from: 2, to: 4});
         // ttt(io);
@@ -243,10 +243,15 @@ module.exports = (io) => {
         })
 
         socket.on('test', function (test) {
-            console.log(test.Pattern.pattern);
+            console.log(test.style);
             pattern = test.Pattern.pattern;
             length = test.Pattern.length;
-            io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Start" })
+            if(test.style!=2){
+                io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Start" })
+            }else{
+                io.sockets.emit('pattern', { next: null, text: "Free Run" })
+            }
+            
             // initButton(io);
 
         })

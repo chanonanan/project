@@ -10,11 +10,9 @@ module.exports = {
       },
       pattern_name: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       pattern: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       created_by: {
         type: Sequelize.INTEGER,
@@ -27,7 +25,6 @@ module.exports = {
       },
       length: {
         type: Sequelize.INTEGER,
-        allowNull: false
       },
       createdAt: {
         allowNull: false,
