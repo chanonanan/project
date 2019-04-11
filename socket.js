@@ -72,6 +72,25 @@ function getPattern(c) {
     }
 }
 
+function getNumber(c) {
+    switch (c) {
+        case switch1:
+            return '1';
+        case switch2:
+            return '2';
+        case switch3:
+            return '3';
+        case switch4:
+            return '4';
+        case switch5:
+            return '5';
+        case switch6:
+            return '6';
+        case switch7:
+            return '7';
+    }
+}
+
 function getPlateNumber(c) {
     switch (c) {
         case '1':
@@ -147,11 +166,11 @@ function matchButton(err, value, button, io) {
             start = startTime;
             count++;
             length++;
-            pattern = String(button);
+            pattern = getNumber(button);
             io.sockets.emit('start', true);
             // io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Next" })
         } else {
-            pattern += String(button);
+            pattern += getNumber(button);
             length++;
             next = timestamp(button, io);
         }
