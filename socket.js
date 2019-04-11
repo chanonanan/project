@@ -48,7 +48,7 @@ var pattern = "4142454746434";
 // var pattern = "123123123";
 var next;
 var oldButton;
-var isFinish = false;
+var isInit = false;
 var isFreeRun = false;
 var allowError = false;
 
@@ -121,7 +121,7 @@ function timestamp(sw, io) {
         var front_ms = ms[0] + ms[1];
         var last_ms = ms[2];
         io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), parseInt(front_ms), parseInt(last_ms)], text: "Stop" })
-        if (!isFinish) {
+        if (!isInit) {
             finish();
         }
         next = null;
@@ -188,7 +188,7 @@ function matchButton(err, value, button, io) {
 }
 
 function finish() {
-    isFinish = true;
+    isInit = false;
     // LED.writeSync(0); // Turn LED off
     // LED.unexport(); // Unexport LED GPIO to free resources
     button1.unexport(); // Unexport Button GPIO to free resources
@@ -201,7 +201,7 @@ function finish() {
 }
 
 process.on('SIGINT', function () { //on ctrl+c
-    if (!isFinish) {
+    if (isInit) {
         finish();
     }
     process.exit(); //exit completely
@@ -227,6 +227,7 @@ function initButton(io) {
     button5.watch(function (err, value) { matchButton(err, value, switch5, io) });
     button6.watch(function (err, value) { matchButton(err, value, switch6, io) });
     button7.watch(function (err, value) { matchButton(err, value, switch7, io) });
+    isInit = true;
 }
 
 module.exports = (io) => {
@@ -252,7 +253,7 @@ module.exports = (io) => {
 
         socket.on('disconnect', function () {
             console.log('user disconnected');
-            if (!isFinish) {
+            if (isInit) {
                 finish();
             }
         });
@@ -281,7 +282,6 @@ module.exports = (io) => {
             }
 
             initButton(io);
-            isFinish = false;
         })
     });
 
