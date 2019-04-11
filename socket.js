@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 //GPIO
-// var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
+var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 
 
 // Define GPIO port
@@ -231,7 +231,7 @@ module.exports = (io) => {
         console.log('user connected');
         count = 0;
         next = null;
-        isFinish = false;
+        
         socket.on('start', function (message) {
             start = new Date();
             io.sockets.emit('start', true);
@@ -276,7 +276,7 @@ module.exports = (io) => {
             }
 
             initButton(io);
-
+            isFinish = false;
         })
     });
 
