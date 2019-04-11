@@ -49,6 +49,8 @@ var pattern = "4142454746434";
 var next;
 var oldButton;
 var isFinish = false;
+var isFreeRun = false;
+var allowError = false;
 
 // get pattern for next button
 function getPattern(c) {
@@ -137,29 +139,47 @@ function matchButton(err, value, button, io) {
         console.error('There was an error', err); //output error message to console
         return;
     }
-
-    if (next == button) {
+    if (isFreeRun) {
         if (count == 0) {
             startTime = new Date();
             start = startTime;
             count++;
-            next = getPattern(count);
+            pattern = String(button);
             io.sockets.emit('start', true);
-            // io.sockets.emit('next', next); //send button status to client
-            io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Next" })
+            // io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Next" })
         } else {
-            if (getPattern(count - 1) == oldButton) {
-                next = timestamp(button, io);
-                // io.sockets.emit('next', next); //send button status to client
-                // io.sockets.emit('delta', delta);
-                // socket.emit('count', count);
-                console.log('Next: ', next);
-
-            }
+            pattern += String(button);
 
         }
-        oldButton = button;
+    } else {
+        if(allowError){
+
+        }else{
+            if (next == button) {
+                if (count == 0) {
+                    startTime = new Date();
+                    start = startTime;
+                    count++;
+                    next = getPattern(count);
+                    io.sockets.emit('start', true);
+                    io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Next" })
+                } else {
+                    if (getPattern(count - 1) == oldButton) {
+                        next = timestamp(button, io);
+                        // io.sockets.emit('next', next); //send button status to client
+                        // io.sockets.emit('delta', delta);
+                        // socket.emit('count', count);
+                        console.log('Next: ', next);
+    
+                    }
+    
+                }
+                oldButton = button;
+            }
+        }
+        
     }
+
 
 }
 
@@ -206,35 +226,31 @@ function initButton(io) {
 }
 
 module.exports = (io) => {
-    // console.log('IO: ', io);
 
     io.on('connection', function (socket) {
         console.log('user connected');
         count = 0;
         next = null;
         isFinish = false;
-        // console.log('next', next);
-        // console.log('count', count);
-        // io.sockets.emit('start-test', "true");
-        // io.sockets.emit('lap', { lap: 1, time: 0.334, from: 2, to: 4});
-        // ttt(io);
         socket.on('start', function (message) {
             start = new Date();
             io.sockets.emit('start', true);
         })
 
         socket.on('stop', function (message) {
-            // console.log(message);
             var stop = new Date();
             var diff = stop - start;
             var d = new Date(diff);
-            console.log('Timelab: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds()); // "4:59"
+            console.log('stop: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds());
             io.sockets.emit('stop', [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()])
         })
 
 
         socket.on('disconnect', function () {
             console.log('user disconnected');
+            if (!isFinish) {
+                finish();
+            }
         });
 
         socket.on('message', function (message) {
@@ -246,13 +262,20 @@ module.exports = (io) => {
             console.log(test.style);
             pattern = test.Pattern.pattern;
             length = test.Pattern.length;
-            if(test.style!=2){
-                io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Start" })
-            }else{
-                io.sockets.emit('pattern', { next: null, text: "Free Run" })
+            if (test.style != 2) {
+                if(test.style == 1){
+                    allowError = true;
+                }else{
+                    allowError = false;
+                }
+                io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Start" });
+                isFreeRun = false;
+            } else {
+                io.sockets.emit('pattern', { next: null, text: "Free Run" });
+                isFreeRun = true;
             }
-            
-            // initButton(io);
+
+            initButton(io);
 
         })
     });
