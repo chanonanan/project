@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var recordController = require('app/web/record');
+var recordController = require('./app/web/record');
 
 //GPIO
 var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
