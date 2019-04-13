@@ -52,6 +52,7 @@ var oldButton;
 var isInit = false;
 var isFreeRun = false;
 var allowError = false;
+var test_id;
 
 // get pattern for next button
 function getPattern(c) {
@@ -124,7 +125,7 @@ function timestamp(sw, io) {
     console.log("count: " + count);
     var old_count = count - 1;
     io.sockets.emit('lap', { lap: count, time: [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()], from: getPlateNumber(pattern[old_count]), to: getPlateNumber(pattern[count]) });
-    recordController.store({ lap: count, duration: delta, from: getPlateNumber(pattern[old_count]), to: getPlateNumber(pattern[count]) });
+    recordController.store({ lap: count, duration: delta, from: getPlateNumber(pattern[old_count]), to: getPlateNumber(pattern[count]),test_id: test_id });
     startTime = endTime;
     // next = random(sw);
     count++;
@@ -286,6 +287,7 @@ module.exports = (io) => {
 
         socket.on('test', function (test) {
             console.log(test.style);
+            test_id = test.id;
             pattern = test.Pattern.pattern;
             length = test.Pattern.length;
             if (test.style != 2) {

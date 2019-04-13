@@ -8,8 +8,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      timestamp: {
-        type: Sequelize.DATE,
+      duration: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      from: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      to: {
+        type: Sequelize.STRING,
         allowNull: false
       },
       test_id: {
