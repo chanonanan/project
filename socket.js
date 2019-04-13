@@ -150,7 +150,7 @@ function timestamp(sw, io) {
         count = 0;
     } else {
         if (!isFreeRun) {
-            io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Next" });
+            io.sockets.emit('pattern', { text: "Next: " + getPlateNumber(pattern[count]) });
             next = getPattern(count);
         }
     }
@@ -188,7 +188,7 @@ function matchButton(err, value, button, io) {
                     count++;
                     next = getPattern(count);
                     io.sockets.emit('start', true);
-                    io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Next" })
+                    io.sockets.emit('pattern', { text: "Next: " + getPlateNumber(pattern[count]) })
                 } else {
                     if (getPattern(count - 1) == oldButton) {
                         next = timestamp(button, io);
@@ -296,10 +296,10 @@ module.exports = (io) => {
                 } else {
                     allowError = false;
                 }
-                io.sockets.emit('pattern', { next: getPlateNumber(pattern[count]), text: "Start" });
+                io.sockets.emit('pattern', { text: "Start: " + getPlateNumber(pattern[count])});
                 isFreeRun = false;
             } else {
-                io.sockets.emit('pattern', { next: null, text: "Free Run" });
+                io.sockets.emit('pattern', { text: "Free Run" });
                 isFreeRun = true;
                 length = 1;
             }
