@@ -54,6 +54,44 @@ var isFreeRun = false;
 var allowError = false;
 var test_id;
 
+function initButton(io) {
+    button1 = new Gpio(switch1, 'in', edge, { debounceTimeout: debounce });
+    button2 = new Gpio(switch2, 'in', edge, { debounceTimeout: debounce });
+    button3 = new Gpio(switch3, 'in', edge, { debounceTimeout: debounce });
+    button4 = new Gpio(switch4, 'in', edge, { debounceTimeout: debounce });
+    button5 = new Gpio(switch5, 'in', edge, { debounceTimeout: debounce });
+    button6 = new Gpio(switch6, 'in', edge, { debounceTimeout: debounce });
+    button7 = new Gpio(switch7, 'in', edge, { debounceTimeout: debounce });
+    button1.watch(function (err, value) { matchButton(err, value, switch1, io) });
+    button2.watch(function (err, value) { matchButton(err, value, switch2, io) });
+    button3.watch(function (err, value) { matchButton(err, value, switch3, io) });
+    button4.watch(function (err, value) { matchButton(err, value, switch4, io) });
+    button5.watch(function (err, value) { matchButton(err, value, switch5, io) });
+    button6.watch(function (err, value) { matchButton(err, value, switch6, io) });
+    button7.watch(function (err, value) { matchButton(err, value, switch7, io) });
+    isInit = true;
+}
+
+function unExportBtn() {
+    isInit = false;
+    // LED.writeSync(0); // Turn LED off
+    // LED.unexport(); // Unexport LED GPIO to free resources
+    button1.unexport(); // Unexport Button GPIO to free resources
+    button2.unexport(); // Unexport Button GPIO to free resources
+    button3.unexport(); // Unexport Button GPIO to free resources
+    button4.unexport(); // Unexport Button GPIO to free resources
+    button5.unexport(); // Unexport Button GPIO to free resources
+    button6.unexport(); // Unexport Button GPIO to free resources
+    button7.unexport(); // Unexport Button GPIO to free resources
+}
+
+process.on('SIGINT', function () { //on ctrl+c
+    if (isInit) {
+        unExportBtn();
+    }
+    process.exit(); //exit completely
+});
+
 // get pattern for next button
 function getPattern(c) {
     switch (pattern[c]) {
@@ -144,7 +182,7 @@ function timestamp(sw, io) {
         var last_ms = ms[2];
         io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), parseInt(front_ms), parseInt(last_ms)], text: "Stop" })
         if (!isInit) {
-            finish();
+            unExportBtn();
         }
         next = null;
         count = 0;
@@ -209,49 +247,6 @@ function matchButton(err, value, button, io) {
 
 }
 
-function finish() {
-    isInit = false;
-    // LED.writeSync(0); // Turn LED off
-    // LED.unexport(); // Unexport LED GPIO to free resources
-    button1.unexport(); // Unexport Button GPIO to free resources
-    button2.unexport(); // Unexport Button GPIO to free resources
-    button3.unexport(); // Unexport Button GPIO to free resources
-    button4.unexport(); // Unexport Button GPIO to free resources
-    button5.unexport(); // Unexport Button GPIO to free resources
-    button6.unexport(); // Unexport Button GPIO to free resources
-    button7.unexport(); // Unexport Button GPIO to free resources
-}
-
-process.on('SIGINT', function () { //on ctrl+c
-    if (isInit) {
-        finish();
-    }
-    process.exit(); //exit completely
-});
-
-function ttt(io) {
-    console.log(getPlateNumber(pattern[count]), getPlateNumber('4'))
-    io.sockets.emit('lap', { lap: 1, time: 0.334, from: getPlateNumber('2'), to: getPlateNumber('4') });
-}
-
-function initButton(io) {
-    button1 = new Gpio(switch1, 'in', edge, { debounceTimeout: debounce });
-    button2 = new Gpio(switch2, 'in', edge, { debounceTimeout: debounce });
-    button3 = new Gpio(switch3, 'in', edge, { debounceTimeout: debounce });
-    button4 = new Gpio(switch4, 'in', edge, { debounceTimeout: debounce });
-    button5 = new Gpio(switch5, 'in', edge, { debounceTimeout: debounce });
-    button6 = new Gpio(switch6, 'in', edge, { debounceTimeout: debounce });
-    button7 = new Gpio(switch7, 'in', edge, { debounceTimeout: debounce });
-    button1.watch(function (err, value) { matchButton(err, value, switch1, io) });
-    button2.watch(function (err, value) { matchButton(err, value, switch2, io) });
-    button3.watch(function (err, value) { matchButton(err, value, switch3, io) });
-    button4.watch(function (err, value) { matchButton(err, value, switch4, io) });
-    button5.watch(function (err, value) { matchButton(err, value, switch5, io) });
-    button6.watch(function (err, value) { matchButton(err, value, switch6, io) });
-    button7.watch(function (err, value) { matchButton(err, value, switch7, io) });
-    isInit = true;
-}
-
 module.exports = (io) => {
 
     io.on('connection', function (socket) {
@@ -279,7 +274,7 @@ module.exports = (io) => {
             var last_ms = ms[2];
             io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), parseInt(front_ms), parseInt(last_ms)], text: "Stop" })
             if (isInit) {
-                finish();
+                unExportBtn();
             }
         })
 
@@ -287,7 +282,7 @@ module.exports = (io) => {
         socket.on('disconnect', function () {
             console.log('user disconnected');
             if (isInit) {
-                finish();
+                unExportBtn();
             }
         });
 
