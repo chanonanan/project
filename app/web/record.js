@@ -9,11 +9,7 @@ module.exports = {
             to: rec.to,
             test_id: rec.test_id,
         }).then(res => {
-            res.json({
-                successful: true,
-                message: "create success",
-                data: res
-            })
+            console.log("create success",res);
         })
     }
 }
