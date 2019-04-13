@@ -1,6 +1,10 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Record = sequelize.define('Record', {
+    id: {
+      primaryKey: true,
+      type: DataTypes.UUID
+    },
     duration: DataTypes.INTEGER,
     from: DataTypes.STRING,
     to: DataTypes.STRING
