@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var recordController = require('app/web/record');
 
 //GPIO
 var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
@@ -123,6 +124,7 @@ function timestamp(sw, io) {
     console.log("count: " + count);
     var old_count = count - 1;
     io.sockets.emit('lap', { lap: count, time: [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()], from: getPlateNumber(pattern[old_count]), to: getPlateNumber(pattern[count]) });
+    recordController.store({ lap: count, duration: delta, from: getPlateNumber(pattern[old_count]), to: getPlateNumber(pattern[count]) });
     startTime = endTime;
     // next = random(sw);
     count++;
