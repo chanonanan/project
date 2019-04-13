@@ -278,6 +278,9 @@ module.exports = (io) => {
             var front_ms = ms[0] + ms[1];
             var last_ms = ms[2];
             io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), parseInt(front_ms), parseInt(last_ms)], text: "Stop" })
+            if (isInit) {
+                finish();
+            }
         })
 
 
