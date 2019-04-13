@@ -125,7 +125,7 @@ function timestamp(sw, io) {
     console.log("count: " + count);
     var old_count = count - 1;
     io.sockets.emit('lap', { lap: count, time: [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()], from: getPlateNumber(pattern[old_count]), to: getPlateNumber(pattern[count]) });
-    recordController.store({ lap: count, duration: parseInt(delta), from: pattern[old_count], to: pattern[count],test_id: test_id });
+    recordController.store({ lap: count, duration: parseInt(delta), from: pattern[old_count], to: pattern[count], test_id: test_id });
     startTime = endTime;
     // next = random(sw);
     count++;
@@ -269,7 +269,15 @@ module.exports = (io) => {
             var diff = stop - start;
             var d = new Date(diff);
             console.log('stop: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds());
-            io.sockets.emit('stop', [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()])
+            var ms;
+            if (d.getUTCMilliseconds() < 100) {
+                ms = '0' + d.getUTCMilliseconds();
+            } else {
+                ms = d.getUTCMilliseconds().toString();
+            }
+            var front_ms = ms[0] + ms[1];
+            var last_ms = ms[2];
+            io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), parseInt(front_ms), parseInt(last_ms)], text: "Stop" })
         })
 
 
@@ -296,7 +304,7 @@ module.exports = (io) => {
                 } else {
                     allowError = false;
                 }
-                io.sockets.emit('pattern', { text: "Start: " + getPlateNumber(pattern[count])});
+                io.sockets.emit('pattern', { text: "Start: " + getPlateNumber(pattern[count]) });
                 isFreeRun = false;
             } else {
                 io.sockets.emit('pattern', { text: "Free Run" });
