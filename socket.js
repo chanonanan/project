@@ -125,7 +125,7 @@ function timestamp(sw, io) {
     console.log("count: " + count);
     var old_count = count - 1;
     io.sockets.emit('lap', { lap: count, time: [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()], from: getPlateNumber(pattern[old_count]), to: getPlateNumber(pattern[count]) });
-    recordController.store({ lap: count, duration: delta, from: getPlateNumber(pattern[old_count]), to: getPlateNumber(pattern[count]),test_id: test_id });
+    recordController.store({ lap: count, duration: parseInt(delta), from: pattern[old_count], to: pattern[count],test_id: test_id });
     startTime = endTime;
     // next = random(sw);
     count++;
