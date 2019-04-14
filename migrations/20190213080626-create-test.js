@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false
       },
       player_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: 'Users',
           key: 'id',
@@ -30,7 +30,7 @@ module.exports = {
         onDelete: 'SET NULL',
       },
       coach_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: 'Users',
           key: 'id',
@@ -39,7 +39,7 @@ module.exports = {
         onDelete: 'SET NULL',
       },
       pattern_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: 'Patterns',
           key: 'id',
