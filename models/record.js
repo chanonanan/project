@@ -2,8 +2,12 @@
 module.exports = (sequelize, DataTypes) => {
   const Record = sequelize.define('Record', {
     id: {
+      allowNull: false,
       primaryKey: true,
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      validate: {
+        notNull: true
+      }
     },
     duration: DataTypes.INTEGER,
     from: DataTypes.STRING,
