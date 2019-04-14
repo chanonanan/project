@@ -16,7 +16,7 @@ module.exports = {
         })
     },
     reset: (req, res, next) => {
-        var test_id = req.body.test_id;
+        var test_id = req.params.test_id;
         console.log("test_id", test_id)
         models.Record.findAll({
             where: { test_id: test_id }
