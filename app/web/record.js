@@ -6,10 +6,6 @@ module.exports = {
         var from = rec.from;
         var to = rec.to;
         var test_id = rec.test_id;
-        console.log("duration", duration)
-        console.log("from", from)
-        console.log("to", to)
-        console.log("test_id", test_id)
         models.Record.create({
             duration: duration,
             from: from,
@@ -18,5 +14,19 @@ module.exports = {
         }).then(res => {
             console.log("create success",res);
         })
+    },
+    reset: (req, res, next) => {
+        var test_id = req.body.test_id;
+        console.log("test_id", test_id)
+        models.Record.findAll({
+            where: { test_id: test_id }
+        }).then(record => {
+            record.destroy().then(() => {
+                res.json({
+                    successful: true,
+                    message: "ลบเรียบร้อยแล้ว"
+                });
+            });
+        });
     }
 }
