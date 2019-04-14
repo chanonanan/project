@@ -18,14 +18,12 @@ module.exports = {
     reset: (req, res, next) => {
         var test_id = req.params.test_id;
         console.log("test_id", test_id)
-        models.Record.findAll({
+        models.Record.destroy({
             where: { test_id: test_id }
         }).then(record => {
-            record.destroy().then(() => {
-                res.json({
-                    successful: true,
-                    message: "ลบเรียบร้อยแล้ว"
-                });
+            res.json({
+                successful: true,
+                message: "ลบเรียบร้อยแล้ว"
             });
         });
     }
