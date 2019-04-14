@@ -150,6 +150,25 @@ function getPlateNumber(c) {
     }
 }
 
+function stopTime(stop) {
+    var diff = stop - start;
+    var d = new Date(diff);
+    console.log('Stop: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds()); // "4:59"
+    var ms;
+    if (d.getUTCMilliseconds() < 100) {
+        ms = '0' + d.getUTCMilliseconds();
+    } else {
+        ms = d.getUTCMilliseconds().toString();
+    }
+    var front_ms = ms[0] + ms[1];
+    var last_ms = ms[2];
+    io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), parseInt(front_ms), parseInt(last_ms)], text: "Stop" });
+    io.sockets.emit('start', false);
+    if (!isInit) {
+        unExportBtn();
+    }
+}
+
 //create time stamp
 function timestamp(sw, io) {
     var endTime = new Date();
@@ -169,21 +188,7 @@ function timestamp(sw, io) {
     count++;
     if (count == length) {
         var stop = endTime;
-        var diff = stop - start;
-        var d = new Date(diff);
-        console.log('Stop: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds()); // "4:59"
-        var ms;
-        if (d.getUTCMilliseconds() < 100) {
-            ms = '0' + d.getUTCMilliseconds();
-        } else {
-            ms = d.getUTCMilliseconds().toString();
-        }
-        var front_ms = ms[0] + ms[1];
-        var last_ms = ms[2];
-        io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), parseInt(front_ms), parseInt(last_ms)], text: "Stop" })
-        if (!isInit) {
-            unExportBtn();
-        }
+        stopTime(stop);
         next = null;
         count = 0;
     } else {
@@ -261,21 +266,7 @@ module.exports = (io) => {
 
         socket.on('stop', function (message) {
             var stop = new Date();
-            var diff = stop - start;
-            var d = new Date(diff);
-            console.log('stop: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds());
-            var ms;
-            if (d.getUTCMilliseconds() < 100) {
-                ms = '0' + d.getUTCMilliseconds();
-            } else {
-                ms = d.getUTCMilliseconds().toString();
-            }
-            var front_ms = ms[0] + ms[1];
-            var last_ms = ms[2];
-            io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), parseInt(front_ms), parseInt(last_ms)], text: "Stop" })
-            if (isInit) {
-                unExportBtn();
-            }
+            stopTime(stop);
         })
 
 
