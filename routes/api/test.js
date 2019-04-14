@@ -12,7 +12,7 @@ router.get('/:id', function (req, res, next) {
     testController.get(req, res, next);
 });
 
-router.delete('/reset', (req, res, next) => {
+router.delete('/reset/:test_id', (req, res, next) => {
     recordController.reset(req, res, next);
 });
 
