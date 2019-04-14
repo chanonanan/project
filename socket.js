@@ -150,7 +150,7 @@ function getPlateNumber(c) {
     }
 }
 
-function stopTime(stop) {
+function stopTime(stop,io) {
     var diff = stop - start;
     var d = new Date(diff);
     console.log('Stop: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds()); // "4:59"
@@ -188,7 +188,7 @@ function timestamp(sw, io) {
     count++;
     if (count == length) {
         var stop = endTime;
-        stopTime(stop);
+        stopTime(stop,io);
         next = null;
         count = 0;
     } else {
@@ -266,7 +266,7 @@ module.exports = (io) => {
 
         socket.on('stop', function (message) {
             var stop = new Date();
-            stopTime(stop);
+            stopTime(stop,io);
         })
 
 
