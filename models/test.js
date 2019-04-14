@@ -1,6 +1,12 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Test = sequelize.define('Test', {
+    id: {
+      allowNull: false,
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
     test_name: DataTypes.STRING,
     style: DataTypes.INTEGER,
     date: DataTypes.DATE,

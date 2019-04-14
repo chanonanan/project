@@ -4,9 +4,9 @@ module.exports = {
     return queryInterface.createTable('Patterns', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
       },
       pattern_name: {
         type: Sequelize.STRING,
