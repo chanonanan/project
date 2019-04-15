@@ -16,4 +16,8 @@ router.delete('/reset/:test_id', (req, res, next) => {
     recordController.reset(req, res, next);
 });
 
+router.get('/all', function (req, res, next) {
+    testController.getAll(req, res, next);
+});
+
 module.exports = router;

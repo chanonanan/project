@@ -128,4 +128,44 @@ module.exports = {
             });
         });
     },
+    getAll: (req, res, next) => {
+        models.Test.findAll({
+            include: [
+                {
+                    model: models.User,
+                    as: 'Player',
+                    // attributes: ['firstname'],
+                },
+                {
+                    model: models.User,
+                    as: 'Coach',
+                    // attributes: ['firstname'],
+                },
+                {
+                    model: models.Pattern,
+                    as: 'Pattern',
+                    // attributes: ['firstname'],
+                }
+            ]
+        }).then(test => {
+            console.log("test",test)
+            if (test) {
+                res.json({
+                    successful: true,
+                    message: "get test",
+                    data: test
+                });
+            } else {
+                res.json({
+                    successful: false,
+                    message: "get fail"
+                });
+            }
+        }).catch(() => {
+            res.json({
+                successful: false,
+                message: "get fail"
+            });
+        });
+    },
 }
