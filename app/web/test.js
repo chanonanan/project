@@ -130,6 +130,7 @@ module.exports = {
     },
     getAll: (req, res, next) => {
         models.Test.findAll({
+            raw: true,
             include: [
                 {
                     model: models.User,
