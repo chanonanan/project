@@ -129,6 +129,7 @@ module.exports = {
         });
     },
     getAll: (req, res, next) => {
+        console.log("getALl")
         models.Test.findAll().then(test => {
             console.log("test",test)
             if (test) {
