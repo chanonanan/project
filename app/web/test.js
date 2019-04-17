@@ -129,26 +129,7 @@ module.exports = {
         });
     },
     getAll: (req, res, next) => {
-        models.Test.findAll({
-            raw: true,
-            include: [
-                {
-                    model: models.User,
-                    as: 'Player',
-                    // attributes: ['firstname'],
-                },
-                {
-                    model: models.User,
-                    as: 'Coach',
-                    // attributes: ['firstname'],
-                },
-                {
-                    model: models.Pattern,
-                    as: 'Pattern',
-                    // attributes: ['firstname'],
-                }
-            ]
-        }).then(test => {
+        models.Test.findAll().then(test => {
             console.log("test",test)
             if (test) {
                 res.json({
