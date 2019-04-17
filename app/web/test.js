@@ -140,14 +140,9 @@ module.exports = {
             } else {
                 res.json({
                     successful: false,
-                    message: "get fail"
+                    message: "no test"
                 });
             }
-        }).catch(() => {
-            res.json({
-                successful: false,
-                message: "get fail"
-            });
-        });
+        })
     },
 }
