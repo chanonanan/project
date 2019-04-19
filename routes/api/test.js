@@ -8,6 +8,14 @@ router.post('/create', function (req, res, next) {
     testController.store(req, res, next);
 });
 
+router.get('/all', function (req, res, next) {
+    testController.list(req, res, next);
+});
+
+router.get('/history', function (req, res, next) {
+    testController.getHistory(req, res, next);
+});
+
 router.get('/:id', function (req, res, next) {
     testController.get(req, res, next);
 });
@@ -16,8 +24,5 @@ router.delete('/reset/:test_id', (req, res, next) => {
     recordController.reset(req, res, next);
 });
 
-router.get('/all', function (req, res, next) {
-    testController.getAll(req, res, next);
-});
 
 module.exports = router;

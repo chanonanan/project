@@ -1,11 +1,12 @@
 {
   "development": {
-    "username": "admin",
-    "password": "admin",
+    "username": "root",
+    "password": "",
     "database": "database_development",
     "host": "localhost",
     "dialect": "mysql",
-    "logging": false
+    "logging": false,
+    "timezone": "+07:00"
   },
   "test": {
     "username": "admin",

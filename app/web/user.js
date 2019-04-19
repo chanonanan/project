@@ -3,7 +3,7 @@ const Op = require('sequelize').Op;
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 module.exports = {
-    getPlayer: (req, res, next) => {
+    getAthlete: (req, res, next) => {
         console.log('req', req.body.name)
         models.User.findAll({
             limit: 10,
@@ -112,5 +112,48 @@ module.exports = {
             });
         }
 
+    },
+    get: (req, res, next) => {
+        var user_id = req.query.id;
+        models.User.findOne({
+            where: { id: user_id },
+            include: [
+                {
+                    model: models.Test,
+                    as: 'Athlete',
+                },
+                {
+                    model: models.Test,
+                    as: 'Coach',
+                },
+            ]
+        }).then(user => {
+            console.log("user", user)
+            if (user) {
+                // models.Test.findAll({
+                //     where: {
+                //         [Op.or]: [
+                //             { athlete_id: user_id },
+                //             { coach_id: user_id }
+                //         ]
+                //     },
+                // })
+                res.json({
+                    successful: true,
+                    message: "get user",
+                    data: user
+                });
+            } else {
+                res.json({
+                    successful: false,
+                    message: "get fail"
+                });
+            }
+        }).catch(() => {
+            res.json({
+                successful: false,
+                message: "get fail2"
+            });
+        });
     },
 }

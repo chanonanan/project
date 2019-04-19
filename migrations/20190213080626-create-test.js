@@ -20,7 +20,7 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false
       },
-      player_id: {
+      athlete_id: {
         type: Sequelize.UUID,
         references: {
           model: 'Users',
