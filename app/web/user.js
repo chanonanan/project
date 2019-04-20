@@ -223,7 +223,8 @@ module.exports = {
                     user.save().then(() => {
                         res.json({
                             successful: true,
-                            message: "success"
+                            message: "success",
+                            data: user
                         });
                     })
                 } else {
