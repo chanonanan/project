@@ -204,4 +204,39 @@ module.exports = {
         })
         
     },
+    update: (req, res, next) => {
+        var user_id = req.body.id;
+        var firstname = req.body.firstname;
+        var lastname = req.body.lastname;
+        var email = req.body.email;
+        var role_id = req.body.role_id;
+        if (req.body.img) var img = req.body.img; else var img = "assets/img/profile.png";
+        models.User.findOne({ 
+                where: {  id: user_id  }
+            }).then(user => {
+                if (user) {
+                    user.firstname = firstname;
+                    user.lastname = lastname;
+                    user.email = email;
+                    user.role_id = role_id;
+                    user.img = img;
+                    user.save().then(() => {
+                        res.json({
+                            successful: true,
+                            message: "success"
+                        });
+                    })
+                } else {
+                    res.json({
+                        successful: false,
+                        message: "update error"
+                    });
+                }
+        }).catch(err => {
+            res.json({
+                successful: false,
+                message: "update error"
+            });
+        });
+    },
 }
