@@ -16,7 +16,6 @@ module.exports = {
                     { athlete_id: user_id },
                 ]
             },
-            order: [ [ 'createdAt', 'DESC' ]],
             include:  [
                 {
                     model: models.User,
@@ -32,9 +31,9 @@ module.exports = {
                 },
                 {
                     model: models.Record,
-                    order: [[ "lap", "ASC"]],
                 }
-            ]
+            ],
+            order: [ [ 'createdAt', 'DESC' ], [ sequelize.col("Records.lap"), "ASC"]],
         });
         if(!latest){
             latest = []
