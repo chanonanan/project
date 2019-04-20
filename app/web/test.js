@@ -130,53 +130,77 @@ module.exports = {
             });
         });
     },
-    list: async function (req, res, next) {
+    list: function (req, res, next) {
         if (req.query.page) var page = +req.query.page; else var page = 1;
         if (req.query.sort) var sort = req.query.sort; else var sort = 'date';
         if (req.query.order) var order = req.query.order; else var order = 'DESC';
         if (req.query.search) var search = '%' + req.query.search + '%'; else var search = '%%';
         var per_page = 10
         var offset = per_page * (page - 1)
-        var clients_count = await models.Test.findAll({ raw: true, attributes: [[sequelize.fn('COUNT', sequelize.col('id')), 'count']], })
-        console.log(clients_count)
+        var count;
+        models.Test.findAndCountAll({}).then((data) => {
+            count = data.count;
+            models.Test.findAll({
+                include: [
+                    {
+                        model: models.User,
+                        as: 'Athlete',
+                    },
+                    {
+                        model: models.User,
+                        as: 'Coach',
+                    },
+                    {
+                        model: models.Pattern,
+                        as: 'Pattern',
+                    },
+                ],
+                limit: per_page,
+                offset: offset,
+                order: [[sequelize.col(sort), order]],
+                where: {
+                    $or: {
+                        '$test_name$': {
+                            $like: search
+                        },
+                        '$Athlete.firstname$': {
+                            $like: search
+                        },
+                        '$Athlete.lastname$': {
+                            $like: search
+                        },
+                        '$Coach.firstname$': {
+                            $like: search
+                        },
+                        '$Coach.lastname$': {
+                            $like: search
+                        },
+                        '$Pattern.pattern_name$': {
+                            $like: search
+                        },
+                        '$Pattern.pattern$': {
+                            $like: search
+                        },
+                    }
+                },
+            }).then(tests => {
+                console.log("asd")
+                if (tests) {
+                    res.json({
+                        successful: true,
+                        message: "get test",
+                        data: { test: tests, this_page: page, total_item: count, per_page: per_page },
+                    });
+                } else {
+                    res.json({
+                        successful: false,
+                        message: "no test"
+                    });
+                }
+            })
+        })
 
-            var tests = await models.sequelize.query(
-"SELECT         `test`.`id`,\
-                `test`.`test_name`, \
-                `test`.`style`,\
-                `test`.`date`, \
-                `athlete`.`id`           AS `athlete_id`, \
-                `athlete`.`firstname`    AS `athlete_firstname`, \
-                `athlete`.`lastname`     AS `athlete_lastname`, \
-                `athlete`.`email`        AS `athlete_email`, \
-                `athlete`.`username`     AS `athlete_username`, \
-                `coach`.`id`             AS `coach_id`, \
-                `coach`.`firstname`      AS `coach_firstname`, \
-                `coach`.`lastname`       AS `coach_lastname`, \
-                `coach`.`email`          AS `coach_email`, \
-                `coach`.`username`       AS `coach_username`, \
-                `pattern`.`id`           AS `pattern_id`, \
-                `pattern`.`pattern_name` AS `pattern_pattern_name`, \
-                `pattern`.`pattern`      AS `pattern_pattern`, \
-                `pattern`.`length`       AS `pattern_length` \
-FROM            `tests`                  AS `test` \
-LEFT OUTER JOIN `users`                  AS `athlete` \
-ON              `test`.`athlete_id` = `athlete`.`id` \
-LEFT OUTER JOIN `users` AS `coach` \
-ON              `test`.`coach_id` = `coach`.`id` \
-LEFT OUTER JOIN `patterns` AS `pattern` \
-ON              `test`.`pattern_id` = `pattern`.`id` \
-WHERE(`test`.`test_name` LIKE :search OR `athlete`.`firstname` LIKE :search OR `athlete`.`lastname` LIKE :search \
-        OR `coach`.`firstname` LIKE :search OR `coach`.`lastname` LIKE :search\
-        OR `pattern`.`pattern_name` LIKE :search OR `pattern`.`pattern` LIKE :search )\
-ORDER BY " + sort + ' ' + order + " LIMIT :per_page OFFSET :offset",
-                { replacements: { search: search, per_page: per_page, offset: offset }, type: sequelize.QueryTypes.SELECT }
-            )
-            await res.json({
-                successful: true,
-                message: "list of clients",
-                data: { test: tests, this_page: page, total_item: clients_count['0'].count, per_page: per_page },
-            });
+
 
 
     },
@@ -207,10 +231,10 @@ ORDER BY " + sort + ' ' + order + " LIMIT :per_page OFFSET :offset",
                     res.json({
                         successful: true,
                         message: "get test",
-                        data: {test: test, record: rec}
+                        data: { test: test, record: rec }
                     });
                 })
-                
+
             } else {
                 res.json({
                     successful: false,

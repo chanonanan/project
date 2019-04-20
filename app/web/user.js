@@ -1,5 +1,6 @@
 var models = require('../../models');
 const Op = require('sequelize').Op;
+const sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 module.exports = {
@@ -115,45 +116,90 @@ module.exports = {
     },
     get: (req, res, next) => {
         var user_id = req.query.id;
-        models.User.findOne({
-            where: { id: user_id },
-            include: [
-                {
-                    model: models.Test,
-                    as: 'Athlete',
-                },
-                {
-                    model: models.Test,
-                    as: 'Coach',
-                },
-            ]
-        }).then(user => {
-            console.log("user", user)
-            if (user) {
-                // models.Test.findAll({
-                //     where: {
-                //         [Op.or]: [
-                //             { athlete_id: user_id },
-                //             { coach_id: user_id }
-                //         ]
-                //     },
-                // })
-                res.json({
-                    successful: true,
-                    message: "get user",
-                    data: user
-                });
-            } else {
+        if (req.query.page) var page = +req.query.page; else var page = 1;
+        if (req.query.sort) var sort = req.query.sort; else var sort = 'date';
+        if (req.query.order) var order = req.query.order; else var order = 'DESC';
+        var per_page = 10;
+        var offset = per_page * (page - 1);
+        var count;
+        models.Test.findAndCountAll({
+            where: {
+                [Op.or]: [
+                    { coach_id: user_id },
+                    { athlete_id: user_id },
+                ]
+            }
+        }).then((data) => {
+            count = data.count;
+            console.log(sort)
+            models.User.findOne({
+                where: { id: user_id },
+                include: [
+                    {
+                        model: models.Test,
+                        as: 'Athlete',
+                        include: [
+                            {
+                                model: models.User,
+                                as: 'Athlete',
+                                attributes: ['firstname','lastname'],
+                                raw: true
+                            },
+                            {
+                                model: models.User,
+                                as: 'Coach',
+                                attributes: ['firstname','lastname'],
+                                raw: true
+                            },
+                        ],
+                        limit: per_page,
+                        offset: offset,
+                        order: [[sequelize.col(sort), order]],
+                    },
+                    {
+                        model: models.Test,
+                        as: 'Coach',
+                        include: [
+                            {
+                                model: models.User,
+                                as: 'Athlete',
+                                attributes: ['firstname','lastname'],
+                                raw: true
+                            },
+                            {
+                                model: models.User,
+                                as: 'Coach',
+                                attributes: ['firstname','lastname'],
+                                raw: true
+                            },
+                        ],
+                        limit: per_page,
+                        offset: offset,
+                        order: [[sequelize.col(sort), order]],
+                    },
+                ],
+                logging: true
+            }).then(user => {
+                console.log("user", user)
+                if (user) {
+                    res.json({
+                        successful: true,
+                        message: "get user",
+                        data: {user: user, this_page: page, total_item: count, per_page: per_page}
+                    });
+                } else {
+                    res.json({
+                        successful: false,
+                        message: "get fail"
+                    });
+                }
+            }).catch(() => {
                 res.json({
                     successful: false,
-                    message: "get fail"
+                    message: "get fail2"
                 });
-            }
-        }).catch(() => {
-            res.json({
-                successful: false,
-                message: "get fail2"
             });
-        });
+        })
+        
     },
 }
