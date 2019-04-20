@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
     },
+    lab: DataTypes.INTEGER,
     duration: DataTypes.INTEGER,
     from: DataTypes.STRING,
     to: DataTypes.STRING

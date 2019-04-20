@@ -2,11 +2,13 @@ var models = require('../../models');
 const Op = require('sequelize').Op;
 module.exports = {
     store: (rec) => {
+        var lab = rec.lab;
         var duration = rec.duration;
         var from = rec.from;
         var to = rec.to;
         var test_id = rec.test_id;
         models.Record.create({
+            lab: lab,
             duration: duration,
             from: from,
             to: to,
