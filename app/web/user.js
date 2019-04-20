@@ -63,6 +63,7 @@ module.exports = {
         var lastname = req.body.lastname;
         var email = req.body.email;
         var role_id = req.body.role_id;
+        if (req.body.img) var img = req.body.img; else var img = "assets/img/profile.png";
         if (!username || !password) {
             res.json({
                 successful: false,
@@ -87,7 +88,8 @@ module.exports = {
                                     firstname: firstname,
                                     lastname: lastname,
                                     email: email,
-                                    role_id: role_id
+                                    role_id: role_id,
+                                    img: img
                                 }).then(resu => {
                                     res.json({
                                         successful: true,

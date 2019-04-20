@@ -11,6 +11,10 @@ router.post('/register', function (req, res, next) {
     userController.store(req, res, next);
 });
 
+router.post('/profile', function (req, res, next) {
+    userController.store(req, res, next);
+});
+
 router.get('/', function (req, res, next) {
     userController.get(req, res, next);
 });
