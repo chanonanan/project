@@ -32,6 +32,7 @@ module.exports = {
                 },
                 {
                     model: models.Record,
+                    order: [[ "lap", "ASC"]],
                 }
             ]
         });
