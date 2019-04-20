@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var recordController = require('./app/web/record');
+var testController = require('./app/web/test');
 
 //GPIO
 var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
@@ -162,7 +163,7 @@ function stopTime(stop,io) {
     }
     var front_ms = ms[0] + ms[1];
     var last_ms = ms[2];
-    io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), parseInt(front_ms), parseInt(last_ms)], text: "Stop" });
+    io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), parseInt(front_ms), parseInt(last_ms)], text: "Stop", pattern: pattern });
     io.sockets.emit('start', false);
     if (!isInit) {
         unExportBtn();

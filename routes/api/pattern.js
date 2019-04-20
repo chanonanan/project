@@ -7,4 +7,8 @@ router.post('/', function (req, res, next) {
     patternController.getPattern(req, res, next);
 });
 
+router.put('/', function (req, res, next) {
+    patternController.update(req, res, next);
+});
+
 module.exports = router;
