@@ -229,7 +229,7 @@ module.exports = {
                     where: { test_id: test_id }
                 }).then(recs => {
                     for(rec in recs){
-                        var d = new Date(delta);
+                        var d = new Date(rec.duration);
                         rec.time = [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()]
                     }
                     res.json({
