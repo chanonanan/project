@@ -4,6 +4,7 @@ var router = express.Router();
 router.use('/test', require('./test'));
 router.use('/user', require('./user'));
 router.use('/pattern', require('./pattern'));
+router.use('/dashboard', require('./dashboard'));
 
 router.use(function (err, req, res, next) {
   if (err.name === 'ValidationError') {
