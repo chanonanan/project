@@ -227,7 +227,7 @@ module.exports = {
             if (test) {
                 models.Record.findAll({
                     where: { test_id: test_id },
-                    order: [[ "lab", "ASC"]],
+                    order: [[ "lap", "ASC"]],
                 }).then(recs => {
                     for(let rec of recs){
                         var d = new Date(rec.duration);
