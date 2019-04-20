@@ -92,35 +92,16 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-// var io = require('socket.io').listen(server);
 
-// io.sockets.on('connection', function (socket) {
-//   console.log('user connected');
-//   // io.sockets.emit('start-test', "true");
-//   io.sockets.emit('pattern', { next: 'D', text: "Start" })
+//Use on Pi only
 
-//   socket.on('disconnect', function () {
-//     console.log('user disconnected');
-//   });
+let io = require('socket.io')(server);
 
-//   socket.on('message', function (message) {
-//     console.log(message);
-//     io.sockets.emit('message', { type: 'new-message', text: "message" })
-//   })
+// place this middleware before any other route definitions
+// makes io available as req.io in all request handlers
+app.use(function(req, res, next) {
+    req.io = io;
+    next();
+});
 
-//   socket.on('start', function (message) {
-//     console.log(message);
-//     io.sockets.emit('start', { type: 'new-message', text: "message" })
-//   })
-// });
-
-// let io = require('socket.io')(server);
-
-// // place this middleware before any other route definitions
-// // makes io available as req.io in all request handlers
-// app.use(function(req, res, next) {
-//     req.io = io;
-//     next();
-// });
-
-// require('../socket.js')(io);
+require('../socket.js')(io);
