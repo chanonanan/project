@@ -206,51 +206,56 @@ module.exports = {
     },
     getHistory: (req, res, next) => {
         var test_id = req.query.id;
-        models.Test.findOne({
-            where: { id: test_id },
-            include: [
-                {
-                    model: models.User,
-                    as: 'Athlete',
-                },
-                {
-                    model: models.User,
-                    as: 'Coach',
-                },
-                {
-                    model: models.Pattern,
-                    as: 'Pattern',
-                }
-            ]
-        }).then(test => {
-            console.log("test", test)
-            if (test) {
-                models.Record.findAll({
-                    where: { test_id: test_id },
-                    order: [[ "lap", "ASC"]],
-                }).then(recs => {
-                    for(let rec of recs){
-                        var d = new Date(rec.duration);
-                        rec.time = [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()]
+        models.Record.destroy({
+            where: { test_id: test_id }
+        }).then(record => {
+            models.Test.findOne({
+                where: { id: test_id },
+                include: [
+                    {
+                        model: models.User,
+                        as: 'Athlete',
+                    },
+                    {
+                        model: models.User,
+                        as: 'Coach',
+                    },
+                    {
+                        model: models.Pattern,
+                        as: 'Pattern',
                     }
+                ]
+            }).then(test => {
+                console.log("test", test)
+                if (test) {
+                    models.Record.findAll({
+                        where: { test_id: test_id },
+                        order: [[ "lap", "ASC"]],
+                    }).then(recs => {
+                        for(let rec of recs){
+                            var d = new Date(rec.duration);
+                            rec.time = [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()]
+                        }
+                        res.json({
+                            successful: true,
+                            message: "get test",
+                            data: { test: test, record: recs }
+                        });
+                    })
+    
+                } else {
                     res.json({
-                        successful: true,
-                        message: "get test",
-                        data: { test: test, record: recs }
+                        successful: false,
+                        message: "get fail"
                     });
-                })
-
-            } else {
+                }
+            }).catch(() => {
                 res.json({
                     successful: false,
                     message: "get fail"
                 });
-            }
-        }).catch(() => {
-            res.json({
-                successful: false,
-                message: "get fail"
             });
         });
+        
     },
 }
