@@ -226,9 +226,10 @@ module.exports = {
             console.log("test", test)
             if (test) {
                 models.Record.findAll({
-                    where: { test_id: test_id }
+                    where: { test_id: test_id },
+                    order: [[ "lab", "ASC"]],
                 }).then(recs => {
-                    for(rec in recs){
+                    for(let rec of recs){
                         var d = new Date(rec.duration);
                         rec.time = [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()]
                     }
