@@ -85,50 +85,55 @@ module.exports = {
     },
     get: (req, res, next) => {
         var test_id = req.params.id;
-        models.Test.findOne({
-            where: { id: test_id },
-            include: [
-                {
-                    model: models.User,
-                    as: 'Athlete',
-                    // attributes: ['firstname'],
-                },
-                {
-                    model: models.User,
-                    as: 'Coach',
-                    // attributes: ['firstname'],
-                },
-                {
-                    model: models.Pattern,
-                    as: 'Pattern',
-                    // attributes: ['firstname'],
+        models.Record.destroy({
+            where: { test_id: test_id }
+        }).then(record => {
+            models.Test.findOne({
+                where: { id: test_id },
+                include: [
+                    {
+                        model: models.User,
+                        as: 'Athlete',
+                        // attributes: ['firstname'],
+                    },
+                    {
+                        model: models.User,
+                        as: 'Coach',
+                        // attributes: ['firstname'],
+                    },
+                    {
+                        model: models.Pattern,
+                        as: 'Pattern',
+                        // attributes: ['firstname'],
+                    }
+                ]
+            }).then(test => {
+                console.log("test", test)
+                if (test) {
+                    // models.User.findOne({
+                    //     where: { id: athlete_id }
+                    // }).then(athlete => {
+    
+                    // })
+                    res.json({
+                        successful: true,
+                        message: "get test",
+                        data: test
+                    });
+                } else {
+                    res.json({
+                        successful: false,
+                        message: "get fail"
+                    });
                 }
-            ]
-        }).then(test => {
-            console.log("test", test)
-            if (test) {
-                // models.User.findOne({
-                //     where: { id: athlete_id }
-                // }).then(athlete => {
-
-                // })
-                res.json({
-                    successful: true,
-                    message: "get test",
-                    data: test
-                });
-            } else {
+            }).catch(() => {
                 res.json({
                     successful: false,
                     message: "get fail"
                 });
-            }
-        }).catch(() => {
-            res.json({
-                successful: false,
-                message: "get fail"
             });
         });
+        
     },
     list: function (req, res, next) {
         if (req.query.page) var page = +req.query.page; else var page = 1;
@@ -206,56 +211,51 @@ module.exports = {
     },
     getHistory: (req, res, next) => {
         var test_id = req.query.id;
-        models.Record.destroy({
-            where: { test_id: test_id }
-        }).then(record => {
-            models.Test.findOne({
-                where: { id: test_id },
-                include: [
-                    {
-                        model: models.User,
-                        as: 'Athlete',
-                    },
-                    {
-                        model: models.User,
-                        as: 'Coach',
-                    },
-                    {
-                        model: models.Pattern,
-                        as: 'Pattern',
-                    }
-                ]
-            }).then(test => {
-                console.log("test", test)
-                if (test) {
-                    models.Record.findAll({
-                        where: { test_id: test_id },
-                        order: [[ "lap", "ASC"]],
-                    }).then(recs => {
-                        for(let rec of recs){
-                            var d = new Date(rec.duration);
-                            rec.time = [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()]
-                        }
-                        res.json({
-                            successful: true,
-                            message: "get test",
-                            data: { test: test, record: recs }
-                        });
-                    })
-    
-                } else {
-                    res.json({
-                        successful: false,
-                        message: "get fail"
-                    });
+        models.Test.findOne({
+            where: { id: test_id },
+            include: [
+                {
+                    model: models.User,
+                    as: 'Athlete',
+                },
+                {
+                    model: models.User,
+                    as: 'Coach',
+                },
+                {
+                    model: models.Pattern,
+                    as: 'Pattern',
                 }
-            }).catch(() => {
+            ]
+        }).then(test => {
+            console.log("test", test)
+            if (test) {
+                models.Record.findAll({
+                    where: { test_id: test_id },
+                    order: [[ "lap", "ASC"]],
+                }).then(recs => {
+                    for(let rec of recs){
+                        var d = new Date(rec.duration);
+                        rec.time = [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()]
+                    }
+                    res.json({
+                        successful: true,
+                        message: "get test",
+                        data: { test: test, record: recs }
+                    });
+                })
+
+            } else {
                 res.json({
                     successful: false,
                     message: "get fail"
                 });
+            }
+        }).catch(() => {
+            res.json({
+                successful: false,
+                message: "get fail"
             });
         });
-        
     },
 }
