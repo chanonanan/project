@@ -227,11 +227,15 @@ module.exports = {
             if (test) {
                 models.Record.findAll({
                     where: { test_id: test_id }
-                }).then(rec => {
+                }).then(recs => {
+                    for(rec in recs){
+                        var d = new Date(delta);
+                        rec.time = [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()]
+                    }
                     res.json({
                         successful: true,
                         message: "get test",
-                        data: { test: test, record: rec }
+                        data: { test: test, record: recs }
                     });
                 })
 
