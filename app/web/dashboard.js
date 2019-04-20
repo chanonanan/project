@@ -45,7 +45,7 @@ module.exports = {
                     athlete: athlete.count,
                     test: test.count,
                 },
-                latest: latest.Records
+                latest: latest
             }
         });
     },
