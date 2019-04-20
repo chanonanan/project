@@ -33,7 +33,7 @@ module.exports = {
                     model: models.Record,
                 }
             ],
-            order: [ [ 'createdAt', 'DESC' ], [ sequelize.col("Records.lap"), "ASC"]],
+            order: [ [ 'createdAt', 'DESC' ], [ models.Record, 'lap', "ASC"]],
         });
         if(!latest){
             latest = []
