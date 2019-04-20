@@ -50,22 +50,25 @@ module.exports = {
         });
     },
     update: (req, res, next) => {
-        let pattern_id = req.query.id;
-        let pattern = req.query.pattern;
-        models.Pattern.update(
-            { 
+        let pattern_id = req.body.id;
+        let pattern_pattern = req.body.pattern;
+        models.Pattern.findOne({ 
                 where: {  id: pattern_id  }
-            },
-            { 
-                pattern : pattern, 
-                length : pattern.length
-            }
-            ).then(pattern => {
-            res.json({
-                successful: true,
-                message: "update success",
-                data: pattern
-            });
+            }).then(pattern => {
+                if (pattern) {
+                    pattern.pattern = pattern_pattern;
+                    pattern.save().then(() => {
+                        res.json({
+                            successful: true,
+                            message: "success"
+                        });
+                    })
+                } else {
+                    res.json({
+                        successful: false,
+                        message: "update error"
+                    });
+                }
         }).catch(err => {
             res.json({
                 successful: false,
