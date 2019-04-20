@@ -8,7 +8,7 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4
       },
-      lab: {
+      lap: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
