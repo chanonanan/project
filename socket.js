@@ -232,6 +232,7 @@ function timestamp(sw, io) {
 }
 
 function matchButton(err, value, button, io) {
+    console.log("matchButton",button)
     if (err) { //if an error
         console.error('There was an error', err); //output error message to console
         return;
