@@ -263,7 +263,7 @@ function matchButton(err, value, button, io) {
                     next = getPattern(count);
                     io.sockets.emit('start', true);
                     io.sockets.emit('pattern', { text: "Next: " + getPlateNumber(pattern[count]) })
-                    io2.sockets.emit('direction', pattern[count]);
+                    
                 } else {
                     if (getPattern(count - 1) == oldButton) {
                         next = timestamp(button, io);
@@ -276,6 +276,7 @@ function matchButton(err, value, button, io) {
 
                 }
                 oldButton = button;
+                io2.sockets.emit('direction', pattern[count]);
             }
         }
 
