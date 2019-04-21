@@ -327,6 +327,7 @@ module.exports = (io) => {
                     allowError = false;
                 }
                 io.sockets.emit('pattern', { text: "Start: " + getPlateNumber(pattern[count]) });
+                next = getPattern(count);
                 isFreeRun = false;
             } else {
                 io.sockets.emit('pattern', { text: "Free Run" });
