@@ -14,12 +14,12 @@ module.exports = {
             to: to,
             test_id: test_id,
         }).then(res => {
-            console.log("create success",res);
+            // console.log("create success",res);
         })
     },
     reset: (req, res, next) => {
         var test_id = req.params.test_id;
-        console.log("test_id", test_id)
+        // console.log("test_id", test_id)
         models.Record.destroy({
             where: { test_id: test_id }
         }).then(record => {

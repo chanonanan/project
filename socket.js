@@ -23,12 +23,12 @@ function handler(req, res) { //create server
 }
 
 io2.sockets.on('connection', function (socket) {// WebSocket Connection
-    var lightvalue = 0; //static variable for current status
-    socket.emit('direction', lightvalue);
+    var direction = 0; //static variable for current status
+    socket.emit('direction', direction);
     socket.on('direction', function(data) { //get light switch status from client
-      lightvalue = data;
-      if (lightvalue) {
-        console.log(lightvalue); //turn LED on or off, for now we will just show it in console.log
+        direction = data;
+      if (direction) {
+        console.log("direction",direction); //turn LED on or off, for now we will just show it in console.log
       }
     });
   });

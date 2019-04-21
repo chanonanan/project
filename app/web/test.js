@@ -11,7 +11,7 @@ module.exports = {
         var pattern_id = req.body.pattern_id;
         var pattern_name = req.body.pattern_name;
         var pattern = req.body.pattern;
-        console.log("asdas", pattern_id, pattern_name, pattern)
+        // console.log("asdas", pattern_id, pattern_name, pattern)
         if (!athlete_id || !coach_id) {
             res.json({
                 successful: false,
@@ -19,7 +19,7 @@ module.exports = {
             });
         } else {
             if (!pattern_id) {
-                console.log("null patt id")
+                // console.log("null patt id")
                 var length = null;
                 if (pattern) {
                     length = pattern.length;
@@ -30,7 +30,7 @@ module.exports = {
                     created_by: coach_id,
                     length: length
                 }).then(pattern => {
-                    console.log("pattern.id")
+                    // console.log("pattern.id")
                     pattern_id = pattern.id;
                     models.Test.create({
                         test_name: test_name,
@@ -108,7 +108,7 @@ module.exports = {
                     }
                 ]
             }).then(test => {
-                console.log("test", test)
+                // console.log("test", test)
                 if (test) {
                     // models.User.findOne({
                     //     where: { id: athlete_id }
@@ -189,7 +189,7 @@ module.exports = {
                     }
                 },
             }).then(tests => {
-                console.log("asd")
+                // console.log("asd")
                 if (tests) {
                     res.json({
                         successful: true,
@@ -228,7 +228,7 @@ module.exports = {
                 }
             ]
         }).then(test => {
-            console.log("test", test)
+            // console.log("test", test)
             if (test) {
                 models.Record.findAll({
                     where: { test_id: test_id },

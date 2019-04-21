@@ -38,7 +38,7 @@ module.exports = {
         if(!latest){
             latest = []
         }
-        console.log(latest)
+        // console.log(latest)
         await res.json({
             successful: true,
             message: 'success',

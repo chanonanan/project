@@ -2,7 +2,7 @@ var models = require('../../models');
 const Op = require('sequelize').Op;
 module.exports = {
     getPattern: (req, res, next) => {
-        console.log('req', req.body.name)
+        // console.log('req', req.body.name)
         models.Pattern.findAll({
             limit: 10,
             where: {
@@ -12,7 +12,7 @@ module.exports = {
                 ]
             }
         }).then(pattern => {
-            console.log('found', pattern)
+            // console.log('found', pattern)
             var s = true;
             if (!pattern) s = false;
             res.json({
@@ -21,7 +21,7 @@ module.exports = {
                 data: pattern
             });
         }).catch(err => {
-            console.log('errr')
+            // console.log('errr')
             res.json({
                 successful: false,
                 message: "ไม่พบแพทเทิร์น"

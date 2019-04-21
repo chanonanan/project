@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 module.exports = {
     getAthlete: (req, res, next) => {
-        console.log('req', req.body.name)
+        // console.log('req', req.body.name)
         models.User.findAll({
             limit: 10,
             where: {
@@ -19,7 +19,7 @@ module.exports = {
             },
             attributes: { exclude: ['password','role_id','updatedAt','createdAt'] },
         }).then(user => {
-            console.log('found', user)
+            // console.log('found', user)
             var s = true;
             if (!user) s = false;
             res.json({
@@ -28,7 +28,7 @@ module.exports = {
                 data: user
             });
         }).catch(err => {
-            console.log('errr')
+            // console.log('errr')
             res.json({
                 successful: false,
                 message: "ไม่พบผู้ใช้นี้"
@@ -133,7 +133,7 @@ module.exports = {
             }
         }).then((data) => {
             count = data.count;
-            console.log(sort)
+            // console.log(sort)
             models.User.findOne({
                 where: { id: user_id },
                 include: [
@@ -182,7 +182,7 @@ module.exports = {
                 ],
                 logging: true
             }).then(user => {
-                console.log("user", user)
+                // console.log("user", user)
                 if (user) {
                     res.json({
                         successful: true,
