@@ -38,10 +38,10 @@
       // socket.emit("delta", Number(4));
     });
 
-    socket.on('startTime', function(data) { //get button status from client
+    socket.on('direction', function(data) { //get button status from client
       console.log(data);
       // document.getElementById("startTime").innerHTML = data; //change checkbox $
-      socket.emit("startTime", data); //send push button status to back to se$
+      socket.emit("direction", data); //send push button status to back to se$
     });
 
     socket.on('next', function(data) { //get button status from client
