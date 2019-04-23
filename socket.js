@@ -35,7 +35,7 @@ var switch3 = 4;
 var switch4 = 15;
 var switch5 = 17;
 var switch6 = 10;
-var switch7 = ;
+var switch7 = 8;
 
 var debounce = 250;
 var edge = 'rising';
