@@ -47,7 +47,7 @@
 
     function rotate(deg) {
       var div = document.getElementById('rotating');
-      changeColor(false);
+      changeColor(true);
       div.style.webkitTransform = 'rotate(' + deg + 'deg)';
       div.style.mozTransform = 'rotate(' + deg + 'deg)';
       div.style.msTransform = 'rotate(' + deg + 'deg)';
@@ -64,7 +64,7 @@
     });
 
     socket.on('direction', function (data) { //get button status from client
-      rotate(data*45);
+      rotate((data-1)*45);
       socket.emit("direction", data);
     });
 
