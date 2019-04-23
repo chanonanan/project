@@ -64,7 +64,7 @@
     });
 
     socket.on('direction', function (data) { //get button status from client
-      rotate((data-1)*45);
+      rotate((data-1)*90);
       socket.emit("direction", data);
     });
 
