@@ -18,11 +18,6 @@ var io2 = require('socket.io')(server) //require socket.io module and pass the h
 
 io2.sockets.on('connection', function (socket) {// WebSocket Connection
     console.log("Display Connection");
-    // socket.on('direction', function (data) {
-    //     direction = data;
-    //     if (direction) {
-    //         console.log("direction", direction);
-    // });
 });
 
 var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
@@ -161,9 +156,9 @@ function getPlateNumber(c) {
         case '2':
             return 'ขวา (2)';
         case '3':
-            return 'ซ้าย (3)';
+            return 'หลัง (3)';
         case '4':
-            return 'หลัง (4)';
+            return 'ซ้าย (4)';
     }
 }
 
@@ -281,7 +276,9 @@ function matchButton(err, value, button, io) {
 
                 }
                 oldButton = button;
-                io2.sockets.emit('direction', pattern[count]);
+                io2.sockets.emit('direction', { 'success': true, 'next':pattern[count]});
+            }else{
+                io2.sockets.emit('direction', { 'success': false, 'next':pattern[count]});
             }
         }
 
@@ -332,7 +329,7 @@ module.exports = (io) => {
                     allowError = false;
                 }
                 io.sockets.emit('pattern', { text: "Start: " + getPlateNumber(pattern[count]) });
-                io2.sockets.emit('direction', pattern[count]);
+                io2.sockets.emit('direction', { 'success': true, 'next':pattern[count]});
                 next = getPattern(count);
                 isFreeRun = false;
             } else {
