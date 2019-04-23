@@ -64,13 +64,8 @@
     });
 
     socket.on('direction', function (data) { //get button status from client
-      console.log(data);
-      changeColor(data.success);
-      if(data.success){
-        rotate(data.rotate)
-      }
-      // document.getElementById("startTime").innerHTML = data; //change checkbox $
-      socket.emit("direction", data); //send push button status to back to se$
+      rotate(data*45);
+      socket.emit("direction", data);
     });
 
 

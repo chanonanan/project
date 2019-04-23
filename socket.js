@@ -3,35 +3,27 @@ var router = express.Router();
 var recordController = require('./app/web/record');
 var testController = require('./app/web/test');
 
-var http = require('http').createServer(handler); //require http server, and create server with function handler()
-var fs = require('fs'); //require filesystem module
-var io2 = require('socket.io')(http) //require socket.io module and pass the http object (server)
+var app = express();
 
-// var io = require('socket.io')(http) //require socket.io module and pass the http object (server)
-http.listen(8080); //listen to port 8080
-// handler for web service
-function handler(req, res) { //create server
-    fs.readFile('public/index.html', function (err, data) { //read file index.html in public folder
-        if (err) {
-            res.writeHead(404, { 'Content-Type': 'text/html' }); //display 404 on error
-            return res.end("404 Not Found");
-        }
-        res.writeHead(200, { 'Content-Type': 'text/html' }); //write HTML
-        res.write(data); //write data from index.html
-        return res.end();
-    });
-}
+app.use(express.static('public'));
+
+//make way for some custom css, js and images
+app.use('/asset', express.static(__dirname + '/public/asset'));
+
+var server = app.listen(8081, function () {
+    var port = server.address().port;
+    console.log("Server started at http://localhost:%s", port);
+});
+var io2 = require('socket.io')(server) //require socket.io module and pass the http object (server)
 
 io2.sockets.on('connection', function (socket) {// WebSocket Connection
-    var direction = 0; //static variable for current status
-    socket.emit('direction', direction);
-    socket.on('direction', function(data) { //get light switch status from client
-        direction = data;
-      if (direction) {
-        console.log("direction",direction); //turn LED on or off, for now we will just show it in console.log
-      }
-    });
-  });
+    console.log("Display Connection");
+    // socket.on('direction', function (data) {
+    //     direction = data;
+    //     if (direction) {
+    //         console.log("direction", direction);
+    // });
+});
 
 var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 
@@ -43,10 +35,10 @@ var switch3 = 4;
 var switch4 = 15;
 var switch5 = 17;
 var switch6 = 10;
-var switch7 = 8;
+var switch7 = ;
 
 var debounce = 250;
-var edge = 'both';
+var edge = 'rising';
 
 //Define button to detect input
 var button1;
@@ -161,24 +153,38 @@ function getNumber(c) {
     }
 }
 
+// For Demo
 function getPlateNumber(c) {
     switch (c) {
         case '1':
-            return 'ซ้ายหน้า (1)';
+            return 'หน้า (1)';
         case '2':
-            return 'ขวาหน้า (2)';
+            return 'ขวา (2)';
         case '3':
             return 'ซ้าย (3)';
         case '4':
-            return 'กลาง (4)';
-        case '5':
-            return 'ขวา (5)';
-        case '6':
-            return 'ซ้ายหลัง (6)';
-        case '7':
-            return 'ขวาหลัง (7)';
+            return 'หลัง (4)';
     }
 }
+
+// function getPlateNumber(c) {
+//     switch (c) {
+//         case '1':
+//             return 'ซ้ายหน้า (1)';
+//         case '2':
+//             return 'ขวาหน้า (2)';
+//         case '3':
+//             return 'ซ้าย (3)';
+//         case '4':
+//             return 'กลาง (4)';
+//         case '5':
+//             return 'ขวา (5)';
+//         case '6':
+//             return 'ซ้ายหลัง (6)';
+//         case '7':
+//             return 'ขวาหลัง (7)';
+//     }
+// }
 
 function stopTime(stop, io) {
     var diff = stop - start;
@@ -288,7 +294,6 @@ module.exports = (io) => {
 
     io.on('connection', function (socket) {
         console.log('user connected');
-        io2.sockets.emit('direction', 1);
         count = 0;
         next = null;
 
@@ -327,6 +332,7 @@ module.exports = (io) => {
                     allowError = false;
                 }
                 io.sockets.emit('pattern', { text: "Start: " + getPlateNumber(pattern[count]) });
+                io2.sockets.emit('direction', pattern[count]);
                 next = getPattern(count);
                 isFreeRun = false;
             } else {
