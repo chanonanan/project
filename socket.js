@@ -46,7 +46,7 @@ var switch6 = 10;
 var switch7 = 8;
 
 var debounce = 250;
-var edge = 'falling';
+var edge = 'both';
 
 //Define button to detect input
 var button1;
