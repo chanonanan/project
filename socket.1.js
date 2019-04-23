@@ -3,9 +3,29 @@ var router = express.Router();
 var recordController = require('./app/web/record');
 var testController = require('./app/web/test');
 
-//GPIO
-var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
+var app = express();
 
+app.use(express.static('public'));
+
+//make way for some custom css, js and images
+app.use('/asset', express.static(__dirname + '/public/asset'));
+
+var server = app.listen(8081, function () {
+    var port = server.address().port;
+    console.log("Server started at http://localhost:%s", port);
+});
+var io2 = require('socket.io')(server) //require socket.io module and pass the http object (server)
+
+io2.sockets.on('connection', function (socket) {// WebSocket Connection
+    var direction = 0; //static variable for current status
+    socket.emit('direction', direction);
+    socket.on('direction', function (data) { //get light switch status from client
+        direction = data;
+        if (direction) {
+            console.log("direction", direction); //turn LED on or off, for now we will just show it in console.log
+        }
+    });
+});
 
 // Define GPIO port
 var switch1 = 2;
@@ -56,20 +76,7 @@ var allowError = false;
 var test_id;
 
 function initButton(io) {
-    button1 = new Gpio(switch1, 'in', edge, { debounceTimeout: debounce });
-    button2 = new Gpio(switch2, 'in', edge, { debounceTimeout: debounce });
-    button3 = new Gpio(switch3, 'in', edge, { debounceTimeout: debounce });
-    button4 = new Gpio(switch4, 'in', edge, { debounceTimeout: debounce });
-    button5 = new Gpio(switch5, 'in', edge, { debounceTimeout: debounce });
-    button6 = new Gpio(switch6, 'in', edge, { debounceTimeout: debounce });
-    button7 = new Gpio(switch7, 'in', edge, { debounceTimeout: debounce });
-    button1.watch(function (err, value) { matchButton(err, value, switch1, io) });
-    button2.watch(function (err, value) { matchButton(err, value, switch2, io) });
-    button3.watch(function (err, value) { matchButton(err, value, switch3, io) });
-    button4.watch(function (err, value) { matchButton(err, value, switch4, io) });
-    button5.watch(function (err, value) { matchButton(err, value, switch5, io) });
-    button6.watch(function (err, value) { matchButton(err, value, switch6, io) });
-    button7.watch(function (err, value) { matchButton(err, value, switch7, io) });
+
     isInit = true;
 }
 
@@ -77,13 +84,7 @@ function unExportBtn() {
     isInit = false;
     // LED.writeSync(0); // Turn LED off
     // LED.unexport(); // Unexport LED GPIO to free resources
-    button1.unexport(); // Unexport Button GPIO to free resources
-    button2.unexport(); // Unexport Button GPIO to free resources
-    button3.unexport(); // Unexport Button GPIO to free resources
-    button4.unexport(); // Unexport Button GPIO to free resources
-    button5.unexport(); // Unexport Button GPIO to free resources
-    button6.unexport(); // Unexport Button GPIO to free resources
-    button7.unexport(); // Unexport Button GPIO to free resources
+
 }
 
 process.on('SIGINT', function () { //on ctrl+c
@@ -151,7 +152,7 @@ function getPlateNumber(c) {
     }
 }
 
-function stopTime(stop,io) {
+function stopTime(stop, io) {
     var diff = stop - start;
     var d = new Date(diff);
     console.log('Stop: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds()); // "4:59"
@@ -189,7 +190,7 @@ function timestamp(sw, io) {
     count++;
     if (count == length) {
         var stop = endTime;
-        stopTime(stop,io);
+        stopTime(stop, io);
         next = null;
         count = 0;
     } else {
@@ -203,6 +204,7 @@ function timestamp(sw, io) {
 }
 
 function matchButton(err, value, button, io) {
+    console.log("matchButton", button)
     if (err) { //if an error
         console.error('There was an error', err); //output error message to console
         return;
@@ -245,6 +247,7 @@ function matchButton(err, value, button, io) {
 
                 }
                 oldButton = button;
+                io2.sockets.emit('direction', pattern[count]);
             }
         }
 
@@ -257,6 +260,7 @@ module.exports = (io) => {
 
     io.on('connection', function (socket) {
         console.log('user connected');
+        io2.sockets.emit('direction', 1);
         count = 0;
         next = null;
 
@@ -267,7 +271,7 @@ module.exports = (io) => {
 
         socket.on('stop', function (message) {
             var stop = new Date();
-            stopTime(stop,io);
+            stopTime(stop, io);
         })
 
 
@@ -295,6 +299,7 @@ module.exports = (io) => {
                     allowError = false;
                 }
                 io.sockets.emit('pattern', { text: "Start: " + getPlateNumber(pattern[count]) });
+                next = getPattern(count);
                 isFreeRun = false;
             } else {
                 io.sockets.emit('pattern', { text: "Free Run" });

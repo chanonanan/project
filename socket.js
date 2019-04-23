@@ -40,10 +40,10 @@ var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 var switch1 = 2;
 var switch2 = 3;
 var switch3 = 4;
-var switch4 = 8;
-var switch5 = 10;
-var switch6 = 15;
-var switch7 = 17;
+var switch4 = 15;
+var switch5 = 17;
+var switch6 = 10;
+var switch7 = 8;
 
 var debounce = 250;
 var edge = 'rising';
@@ -263,7 +263,6 @@ function matchButton(err, value, button, io) {
                     next = getPattern(count);
                     io.sockets.emit('start', true);
                     io.sockets.emit('pattern', { text: "Next: " + getPlateNumber(pattern[count]) })
-                    
                 } else {
                     if (getPattern(count - 1) == oldButton) {
                         next = timestamp(button, io);
