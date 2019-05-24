@@ -1,39 +1,40 @@
-var express = require('express');
-var router = express.Router();
-var recordController = require('./app/web/record');
-var testController = require('./app/web/test');
+const express = require('express');
+const router = express.Router();
+const recordController = require('./app/web/record');
+const testController = require('./app/web/test');
 
-var app = express();
+const app = express();
 
 app.use(express.static('public'));
 
 //make way for some custom css, js and images
 app.use('/asset', express.static(__dirname + '/public/asset'));
 
-var server = app.listen(8081, function () {
-    var port = server.address().port;
+const server = app.listen(8081, function () {
+    let port = server.address().port;
     console.log("Server started at http://localhost:%s", port);
 });
-var io2 = require('socket.io')(server) //require socket.io module and pass the http object (server)
+const io2 = require('socket.io')(server) //require socket.io module and pass the http object (server)
 
 io2.sockets.on('connection', function (socket) {// WebSocket Connection
     console.log("Display Connection");
 });
 
-var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
+const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 
 
 // Define GPIO port
-var switch1 = 2;
-var switch2 = 3;
-var switch3 = 4;
-var switch4 = 15;
-var switch5 = 17;
-var switch6 = 10;
-var switch7 = 8;
+const switch1 = 2;
+const switch2 = 3;
+const switch3 = 4;
+const switch4 = 15;
+const switch5 = 17;
+const switch6 = 10;
+const switch7 = 8;
+const switch7 = 7;
 
-var debounce = 250;
-var edge = 'falling';
+const debounce = 250;
+const edge = 'falling';
 
 //Define button to detect input
 var button1;
@@ -43,6 +44,7 @@ var button4;
 var button5;
 var button6;
 var button7;
+var button8;
 // var LED = new Gpio(4, 'out'); //use GPIO pin 4 as output
 
 //place switch
@@ -79,6 +81,7 @@ function initButton(io) {
     button5 = new Gpio(switch5, 'in', edge, { debounceTimeout: debounce });
     button6 = new Gpio(switch6, 'in', edge, { debounceTimeout: debounce });
     button7 = new Gpio(switch7, 'in', edge, { debounceTimeout: debounce });
+    button8 = new Gpio(switch8, 'in', edge, { debounceTimeout: debounce });
     button1.watch(function (err, value) { matchButton(err, value, switch1, io) });
     button2.watch(function (err, value) { matchButton(err, value, switch2, io) });
     button3.watch(function (err, value) { matchButton(err, value, switch3, io) });
@@ -86,6 +89,7 @@ function initButton(io) {
     button5.watch(function (err, value) { matchButton(err, value, switch5, io) });
     button6.watch(function (err, value) { matchButton(err, value, switch6, io) });
     button7.watch(function (err, value) { matchButton(err, value, switch7, io) });
+    button8.watch(function (err, value) { matchButton(err, value, switch8, io) });
     isInit = true;
 }
 
@@ -182,17 +186,17 @@ function getPlateNumber(c) {
 // }
 
 function stopTime(stop, io) {
-    var diff = stop - start;
-    var d = new Date(diff);
+    let diff = stop - start;
+    let d = new Date(diff);
     console.log('Stop: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds()); // "4:59"
-    var ms;
+    let ms;
     if (d.getUTCMilliseconds() < 100) {
         ms = '0' + d.getUTCMilliseconds();
     } else {
         ms = d.getUTCMilliseconds().toString();
     }
-    var front_ms = ms[0] + ms[1];
-    var last_ms = ms[2];
+    let front_ms = ms[0] + ms[1];
+    let last_ms = ms[2];
     io.sockets.emit('stop', { time: [d.getUTCMinutes(), d.getUTCSeconds(), parseInt(front_ms), parseInt(last_ms)], text: "Stop", pattern: pattern });
     io.sockets.emit('start', false);
     if (!isInit) {
@@ -202,23 +206,23 @@ function stopTime(stop, io) {
 
 //create time stamp
 function timestamp(sw, io) {
-    var endTime = new Date();
+    let endTime = new Date();
     delta = endTime - startTime;
-    var d = new Date(delta);
+    let d = new Date(delta);
     console.log('Timelab: ' + d.getUTCMinutes() + ':' + d.getUTCSeconds() + ':' + d.getUTCMilliseconds()); // "4:59"
     console.log(delta + 'millisec');
     console.log("Time: " + startTime);
     console.log("startTime: " + startTime);
     console.log("endTime: " + endTime);
     console.log("count: " + count);
-    var old_count = count - 1;
+    let old_count = count - 1;
     io.sockets.emit('lap', { lap: count, time: [d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()], from: getPlateNumber(pattern[old_count]), to: getPlateNumber(pattern[count]) });
     recordController.store({ lap: count, duration: parseInt(delta), from: pattern[old_count], to: pattern[count], test_id: test_id });
     startTime = endTime;
     // next = random(sw);
     count++;
     if (count == length) {
-        var stop = endTime;
+        let stop = endTime;
         stopTime(stop, io);
         next = null;
         count = 0;
@@ -300,7 +304,7 @@ module.exports = (io) => {
         })
 
         socket.on('stop', function (message) {
-            var stop = new Date();
+            let stop = new Date();
             stopTime(stop, io);
         })
 
