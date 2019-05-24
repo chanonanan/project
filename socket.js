@@ -31,7 +31,7 @@ const switch4 = 15;
 const switch5 = 17;
 const switch6 = 10;
 const switch7 = 8;
-const switch7 = 7;
+const switch8 = 7;
 
 const debounce = 250;
 const edge = 'falling';
